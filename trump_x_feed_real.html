@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特朗普 X 动态汇总 | 2026年2月8日</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #000;
+            color: #e7e9ea;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #000;
+            min-height: 100vh;
+        }
+        
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #2f3336;
+            padding: 16px 20px;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header .subtitle {
+            font-size: 13px;
+            color: #71767b;
+            margin-top: 4px;
+        }
+        
+        .post {
+            border-bottom: 1px solid #2f3336;
+            padding: 16px 20px;
+            transition: background 0.2s;
+        }
+        
+        .post:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-right: 12px;
+            background: linear-gradient(135deg, #c31432 0%, #240b36 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .post-info {
+            flex: 1;
+        }
+        
+        .author {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+        
+        .author-name {
+            font-weight: 700;
+            font-size: 15px;
+        }
+        
+        .verified {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: #1d9bf0;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .verified::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .username {
+            color: #71767b;
+            font-size: 15px;
+        }
+        
+        .timestamp {
+            color: #71767b;
+            font-size: 15px;
+        }
+        
+        .post-content {
+            font-size: 15px;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+        }
+        
+        .repost-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #71767b;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 32px;
+            color: #71767b;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stat-icon {
+            font-size: 16px;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px;
+        }
+        
+        .summary-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #dc2626;
+        }
+        
+        .summary-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(47, 51, 54, 0.5);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .quote-post {
+            border: 1px solid #2f3336;
+            border-radius: 16px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        
+        .quote-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .quote-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #71767b;
+        }
+        
+        .quote-author {
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .quote-content {
+            font-size: 14px;
+            color: #e7e9ea;
+        }
+        
+        .footer {
+            padding: 32px 20px;
+            text-align: center;
+            color: #71767b;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇺🇸 特朗普 X 动态汇总</h1>
+            <div class="subtitle">最新推文与转发 | 2026年2月8日 20:23</div>
+        </div>
+        
+        <div class="summary-box">
+            <div class="summary-title">📊 账号信息</div>
+            <div class="summary-item">
+                <strong>账号名称：</strong>Donald J. Trump（唐纳德·特朗普）
+            </div>
+            <div class="summary-item">
+                <strong>职位：</strong>美国第45任及第47任总统 🇺🇸
+            </div>
+            <div class="summary-item">
+                <strong>关注者：</strong>1.099亿（109.9M）
+            </div>
+            <div class="summary-item">
+                <strong>推文总数：</strong>59,800条
+            </div>
+            <div class="summary-item">
+                <strong>知名关注者：</strong>JD Vance（副总统）、Elon Musk（马斯克）、Donald Trump Jr.（小特朗普）
+            </div>
+        </div>
+
+        <!-- 帖子 1：Dan Scavino 婚礼转发 -->
+        <div class="post">
+            <div class="post-header">
+                <div class="avatar">DT</div>
+                <div class="post-info">
+                    <div class="author">
+                        <span class="author-name">唐纳德·特朗普</span>
+                        <span class="verified"></span>
+                        <span class="username">@realDonaldTrump</span>
+                        <span class="timestamp">· 转发</span>
+                    </div>
+                </div>
+            </div>
+            <div class="repost-badge">🔁 特朗普转发了</div>
+            <div class="quote-post">
+                <div class="quote-header">
+                    <div class="quote-avatar"></div>
+                    <span class="quote-author">Dan Scavino Jr. 🇺🇸 🦅</span>
+                    <span class="verified"></span>
+                    <span class="username">@DanScavino · 2月3日</span>
+                </div>
+                <div class="quote-content">
+                    代表我和 Erin，感谢每一个人给予我们的爱和支持。我们都度过了一个难忘的婚礼日，永远不会忘记。我们感到谦卑和感激。谢谢！🙏🏻 🇺🇸 🦅 🚀
+                    <br><br>
+                    <em>（附视频：婚礼视频 1:13）</em>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-icon">💬</span>
+                    <span>9.8千</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🔁</span>
+                    <span>10千</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">❤️</span>
+                    <span>67千</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">📊</span>
+                    <span>480万 浏览</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 说明卡片 -->
+        <div class="summary-box" style="margin-top: 40px;">
+            <div class="summary-title">💡 说明</div>
+            <div class="summary-item">
+                <strong>数据来源：</strong>从特朗普官方 X 账号 (@realDonaldTrump) 实时抓取
+            </div>
+            <div class="summary-item">
+                <strong>更新时间：</strong>2026年2月8日 20:23 GMT+8
+            </div>
+            <div class="summary-item">
+                <strong>内容说明：</strong>所有内容已翻译为中文，原文可访问 X 官网查看
+            </div>
+            <div class="summary-item">
+                <strong>最新动态：</strong>特朗普最近转发了其前白宫副幕僚长 Dan Scavino 的婚礼感谢推文
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🤖 由贾维斯整理并翻译 | 数据来源：X (Twitter)</p>
+            <p style="margin-top: 8px;">生成时间：2026年2月8日 20:23 GMT+8</p>
+            <p style="margin-top: 4px; color: #1d9bf0;">✓ 所有内容已翻译为中文</p>
+            <p style="margin-top: 8px;">
+                <a href="https://x.com/realDonaldTrump" style="color: #1d9bf0; text-decoration: none;">访问特朗普官方 X 账号 →</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
