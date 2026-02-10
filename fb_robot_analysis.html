@@ -147,7 +147,7 @@
     <div class="container">
         <div class="header">
             <h1>🤖 Facebook Robot 异常分析报告</h1>
-            <p>生成时间: 2026-02-10 16:46:42</p>
+            <p>生成时间: 2026-02-10 16:50:55</p>
         </div>
 
         <div class="summary">
@@ -198,6 +198,9 @@
 
             <h2 class="chart-title">⏱️ 执行时间对比</h2>
             <div class="chart-container" id="timeChart"></div>
+
+            <h2 class="chart-title">🕐 操作时间分布(时区分析)</h2>
+            <div class="chart-container" id="hourChart"></div>
         </div>
 
         <div class="analysis-section">
@@ -237,16 +240,30 @@
 
                 <h3>5. 改进建议</h3>
                 <ul>
+                    <li><strong>时区匹配</strong>: 确保账号的活动时间与注册地的时区相匹配。德国账号应在德国当地的正常活跃时间(8:00-23:00 CET)进行操作</li>
                     <li><strong>账号养号</strong>: 对新账号进行充分的养号，模拟正常用户行为，增加账号活跃度和可信度</li>
                     <li><strong>降低操作频率</strong>: 减少单个账号的操作频率，增加操作间隔的随机性</li>
-                    <li><strong>IP轮换</strong>: 使用更多样化的IP地址，避免多个账号使用同一IP</li>
+                    <li><strong>IP轮换</strong>: 使用更多样化的IP地址，避免多个账号使用同一IP，并确保IP地址与账号注册地匹配</li>
                     <li><strong>行为模拟</strong>: 增加操作的随机性和多样性，模拟真实用户的浏览、点赞、评论等行为</li>
                     <li><strong>账号分级管理</strong>: 对异常账号进行隔离，避免影响正常账号的使用</li>
                     <li><strong>验证码处理</strong>: 建立完善的验证码识别和处理机制</li>
                     <li><strong>Cookie管理</strong>: 优化Cookie的获取和保存机制，减少重复登录</li>
                 </ul>
 
-                <h3>6. 风险提示</h3>
+                <h3>6. 时区因素分析</h3>
+                <ul>
+                    <li><strong>当前情况</strong>: 操作主要集中在北京时间 15:00-21:00，对应德国时间 08:00-14:00(冬令时)</li>
+                    <li><strong>风险点</strong>: 如果账号注册地显示为德国，但在德国深夜或凌晨时段(北京时间白天)频繁活动，会被识别为异常</li>
+                    <li><strong>建议</strong>:
+                        <ul>
+                            <li>德国账号应在德国当地时间 8:00-23:00 活动(对应北京时间 15:00-06:00)</li>
+                            <li>避免在德国凌晨时段(2:00-7:00 CET，对应北京时间 9:00-14:00)进行操作</li>
+                            <li>模拟真实用户的作息规律，工作日和周末的活动模式应有所不同</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>7. 风险提示</h3>
                 <ul>
                     <li>⚠️ 被标记的账号可能会被永久封禁，需要及时处理</li>
                     <li>⚠️ 批量操作容易触发Facebook的风控系统，建议分散操作</li>
@@ -488,6 +505,65 @@
         };
         timeChart.setOption(timeOption);
 
+        // 操作时间分布图
+        var hourChart = echarts.init(document.getElementById('hourChart'));
+        var hourOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function(params) {
+                    var hour = params[0].name;
+                    var beijingTime = hour + ':00 (北京时间)';
+                    var germanyHour = (parseInt(hour) - 7 + 24) % 24;
+                    var germanyTime = germanyHour + ':00 (德国时间)';
+                    var result = beijingTime + '<br/>' + germanyTime + '<br/>';
+                    params.forEach(function(item) {
+                        result += item.marker + item.seriesName + ': ' + item.value + '次<br/>';
+                    });
+                    return result;
+                }
+            },
+            legend: {
+                data: ['正常机器', '异常机器']
+            },
+            xAxis: {
+                type: 'category',
+                data: ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"],
+                name: '小时 (北京时间)',
+                axisLabel: {
+                    rotate: 45
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: '操作次数'
+            },
+            series: [
+                {
+                    name: '正常机器',
+                    type: 'bar',
+                    data: [20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 103, 4, 47, 14, 38, 21, 179, 0, 0],
+                    itemStyle: {
+                        color: '#28a745'
+                    }
+                },
+                {
+                    name: '异常机器',
+                    type: 'bar',
+                    data: [17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 81, 0, 40, 15, 23, 19, 162, 0, 0],
+                    itemStyle: {
+                        color: '#dc3545'
+                    }
+                }
+            ],
+            grid: {
+                bottom: 80
+            }
+        };
+        hourChart.setOption(hourOption);
+
         // 响应式调整
         window.addEventListener('resize', function() {
             successRateChart.resize();
@@ -495,6 +571,7 @@
             errorCodeChart.resize();
             businessStatusChart.resize();
             timeChart.resize();
+            hourChart.resize();
         });
     </script>
 </body>
