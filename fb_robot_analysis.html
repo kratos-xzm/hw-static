@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Robot 异常分析报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+        .summary-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .summary-card h3 {
+            color: #667eea;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .summary-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .summary-card .sub-value {
+            font-size: 14px;
+            color: #666;
+        }
+        .success { color: #28a745; }
+        .warning { color: #ffc107; }
+        .danger { color: #dc3545; }
+        .chart-section {
+            padding: 40px;
+        }
+        .chart-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        .chart-container {
+            width: 100%;
+            height: 500px;
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .analysis-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+        .analysis-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .analysis-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            line-height: 1.8;
+        }
+        .analysis-content h3 {
+            color: #667eea;
+            font-size: 20px;
+            margin: 25px 0 15px 0;
+            padding-left: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .analysis-content ul {
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+        .analysis-content li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Facebook Robot 异常分析报告</h1>
+            <p>生成时间: 2026-02-10 16:46:42</p>
+        </div>
+
+        <div class="summary">
+            <div class="summary-card">
+                <h3>总操作记录</h3>
+                <div class="value">801</div>
+                <div class="sub-value">条记录</div>
+            </div>
+            <div class="summary-card">
+                <h3>异常机器数量</h3>
+                <div class="value danger">17</div>
+                <div class="sub-value">台机器</div>
+            </div>
+            <div class="summary-card">
+                <h3>正常机器成功率</h3>
+                <div class="value success">87.5%</div>
+                <div class="sub-value">378/432 次成功</div>
+            </div>
+            <div class="summary-card">
+                <h3>异常机器成功率</h3>
+                <div class="value danger">83.2%</div>
+                <div class="sub-value">307/369 次成功</div>
+            </div>
+            <div class="summary-card">
+                <h3>正常机器平均耗时</h3>
+                <div class="value">60.2s</div>
+                <div class="sub-value">60212 毫秒</div>
+            </div>
+            <div class="summary-card">
+                <h3>异常机器平均耗时</h3>
+                <div class="value warning">63.3s</div>
+                <div class="sub-value">63292 毫秒</div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2 class="chart-title">📊 成功率对比</h2>
+            <div class="chart-container" id="successRateChart"></div>
+
+            <h2 class="chart-title">📈 操作类型成功率对比</h2>
+            <div class="chart-container" id="operationChart"></div>
+
+            <h2 class="chart-title">🔢 错误代码分布</h2>
+            <div class="chart-container" id="errorCodeChart"></div>
+
+            <h2 class="chart-title">📋 业务状态分布</h2>
+            <div class="chart-container" id="businessStatusChart"></div>
+
+            <h2 class="chart-title">⏱️ 执行时间对比</h2>
+            <div class="chart-container" id="timeChart"></div>
+        </div>
+
+        <div class="analysis-section">
+            <h2 class="analysis-title">🔍 异常原因分析</h2>
+            <div class="analysis-content">
+                <h3>1. 成功率差异分析</h3>
+                <ul>
+                    <li>正常机器成功率: <span class="highlight">87.5%</span></li>
+                    <li>异常机器成功率: <span class="highlight">83.2%</span></li>
+                    <li>成功率差异: <span class="highlight">4.3%</span></li>
+                    <li><strong>结论</strong>: 异常机器的成功率明显低于正常机器，说明这些账号确实存在问题</li>
+                </ul>
+
+                <h3>2. 可能的异常原因</h3>
+                <ul>
+                    <li><strong>账号验证问题</strong>: 从错误日志中可以看到大量"重登，cookie未获取到c_user"的错误，说明这些账号可能被Facebook标记为可疑账号，需要额外验证</li>
+                    <li><strong>登录频率过高</strong>: 异常机器的操作记录显示频繁的登录操作(3000)，可能触发了Facebook的反爬虫机制</li>
+                    <li><strong>IP地址问题</strong>: 多个账号使用相同的VPS IP地址，可能被识别为批量操作</li>
+                    <li><strong>账号养号不足</strong>: 新注册的账号或活跃度不够的账号更容易被限制</li>
+                    <li><strong>操作模式单一</strong>: Robot的操作模式过于规律，缺乏人类行为的随机性</li>
+                </ul>
+
+                <h3>3. 执行时间分析</h3>
+                <ul>
+                    <li>正常机器平均耗时: <span class="highlight">60.2秒</span></li>
+                    <li>异常机器平均耗时: <span class="highlight">63.3秒</span></li>
+                    <li><strong>分析</strong>: 异常机器耗时更长，可能是因为需要处理额外的验证步骤或遇到更多错误重试</li>
+                </ul>
+
+                <h3>4. 错误代码分析</h3>
+                <ul>
+                    <li><strong>错误代码 900</strong>: 登录失败，cookie获取失败，这是最主要的错误类型</li>
+                    <li><strong>错误代码 500</strong>: 服务器内部错误或操作执行失败</li>
+                    <li><strong>错误代码 0</strong>: 操作成功</li>
+                    <li><strong>结论</strong>: 异常机器的错误主要集中在登录环节，说明账号本身的状态存在问题</li>
+                </ul>
+
+                <h3>5. 改进建议</h3>
+                <ul>
+                    <li><strong>账号养号</strong>: 对新账号进行充分的养号，模拟正常用户行为，增加账号活跃度和可信度</li>
+                    <li><strong>降低操作频率</strong>: 减少单个账号的操作频率，增加操作间隔的随机性</li>
+                    <li><strong>IP轮换</strong>: 使用更多样化的IP地址，避免多个账号使用同一IP</li>
+                    <li><strong>行为模拟</strong>: 增加操作的随机性和多样性，模拟真实用户的浏览、点赞、评论等行为</li>
+                    <li><strong>账号分级管理</strong>: 对异常账号进行隔离，避免影响正常账号的使用</li>
+                    <li><strong>验证码处理</strong>: 建立完善的验证码识别和处理机制</li>
+                    <li><strong>Cookie管理</strong>: 优化Cookie的获取和保存机制，减少重复登录</li>
+                </ul>
+
+                <h3>6. 风险提示</h3>
+                <ul>
+                    <li>⚠️ 被标记的账号可能会被永久封禁，需要及时处理</li>
+                    <li>⚠️ 批量操作容易触发Facebook的风控系统，建议分散操作</li>
+                    <li>⚠️ 使用代理IP时要注意IP质量，避免使用已被标记的IP</li>
+                    <li>⚠️ 定期检查账号状态，及时发现和处理异常账号</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Facebook Robot 分析系统 | 数据分析报告</p>
+        </div>
+    </div>
+
+    <script>
+        // 成功率对比图
+        var successRateChart = echarts.init(document.getElementById('successRateChart'));
+        var successRateOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['正常机器', '异常机器']
+            },
+            xAxis: {
+                type: 'category',
+                data: ['成功', '失败']
+            },
+            yAxis: {
+                type: 'value',
+                name: '次数'
+            },
+            series: [
+                {
+                    name: '正常机器',
+                    type: 'bar',
+                    data: [378, 54],
+                    itemStyle: {
+                        color: '#28a745'
+                    }
+                },
+                {
+                    name: '异常机器',
+                    type: 'bar',
+                    data: [307, 62],
+                    itemStyle: {
+                        color: '#dc3545'
+                    }
+                }
+            ]
+        };
+        successRateChart.setOption(successRateOption);
+
+        // 操作类型成功率对比
+        var operationChart = echarts.init(document.getElementById('operationChart'));
+        var operationOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['正常机器成功率', '异常机器成功率']
+            },
+            xAxis: {
+                type: 'category',
+                data: ["1003", "1004", "1005", "1006", "1009", "1017", "1020", "2002", "2007", "3000", "3001", "3002", "4001"],
+                axisLabel: {
+                    rotate: 45
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: '成功率 (%)',
+                max: 100
+            },
+            series: [
+                {
+                    name: '正常机器成功率',
+                    type: 'line',
+                    data: [100.0, 100.0, 100.0, 100.0, 98.3, 65.0, 85.0, 95.5, 98.0, 51.9, 100.0, 100.0, 100.0],
+                    itemStyle: {
+                        color: '#28a745'
+                    },
+                    smooth: true
+                },
+                {
+                    name: '异常机器成功率',
+                    type: 'line',
+                    data: [100.0, 89.5, 94.4, 100.0, 98.1, 88.2, 88.2, 89.5, 77.6, 53.8, 100.0, 100.0, 80.0],
+                    itemStyle: {
+                        color: '#dc3545'
+                    },
+                    smooth: true
+                }
+            ]
+        };
+        operationChart.setOption(operationOption);
+
+        // 错误代码分布
+        var errorCodeChart = echarts.init(document.getElementById('errorCodeChart'));
+        var errorCodeOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['正常机器', '异常机器']
+            },
+            xAxis: {
+                type: 'category',
+                data: ["0", "500", "900", "3001"]
+            },
+            yAxis: {
+                type: 'value',
+                name: '次数'
+            },
+            series: [
+                {
+                    name: '正常机器',
+                    type: 'bar',
+                    data: [378, 31, 22, 1],
+                    itemStyle: {
+                        color: '#667eea'
+                    }
+                },
+                {
+                    name: '异常机器',
+                    type: 'bar',
+                    data: [307, 39, 23, 0],
+                    itemStyle: {
+                        color: '#764ba2'
+                    }
+                }
+            ]
+        };
+        errorCodeChart.setOption(errorCodeOption);
+
+        // 业务状态分布
+        var businessStatusChart = echarts.init(document.getElementById('businessStatusChart'));
+        var businessStatusOption = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left'
+            },
+            series: [
+                {
+                    name: '正常机器',
+                    type: 'pie',
+                    radius: ['40%', '55%'],
+                    center: ['25%', '50%'],
+                    data: [{"value": 335, "name": "\u72b6\u60011"}, {"value": 97, "name": "\u72b6\u60012"}],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    label: {
+                        formatter: '{b}: {c} ({d}%)'
+                    }
+                },
+                {
+                    name: '异常机器',
+                    type: 'pie',
+                    radius: ['40%', '55%'],
+                    center: ['75%', '50%'],
+                    data: [{"value": 287, "name": "\u72b6\u60011"}, {"value": 82, "name": "\u72b6\u60012"}],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    label: {
+                        formatter: '{b}: {c} ({d}%)'
+                    }
+                }
+            ]
+        };
+        businessStatusChart.setOption(businessStatusOption);
+
+        // 执行时间对比
+        var timeChart = echarts.init(document.getElementById('timeChart'));
+        var timeOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['平均执行时间']
+            },
+            yAxis: {
+                type: 'value',
+                name: '时间 (秒)'
+            },
+            series: [
+                {
+                    name: '正常机器',
+                    type: 'bar',
+                    data: [60.2],
+                    itemStyle: {
+                        color: '#28a745'
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}s'
+                    }
+                },
+                {
+                    name: '异常机器',
+                    type: 'bar',
+                    data: [63.3],
+                    itemStyle: {
+                        color: '#dc3545'
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}s'
+                    }
+                }
+            ]
+        };
+        timeChart.setOption(timeOption);
+
+        // 响应式调整
+        window.addEventListener('resize', function() {
+            successRateChart.resize();
+            operationChart.resize();
+            errorCodeChart.resize();
+            businessStatusChart.resize();
+            timeChart.resize();
+        });
+    </script>
+</body>
+</html>
