@@ -273,17 +273,17 @@ API Key: sk-xxxxxxxxxxxxx</code></pre>
 
         <p>不同的 API 平台对模型的命名可能不同，需要在 cc-switch 中做映射：</p>
 
-        <pre><code># Claude Code 使用的模型 (2026年最新)
-claude-opus-4 -> claude-opus-4.6        # 最强性能，复杂任务首选
-claude-sonnet-4 -> claude-sonnet-4.6    # 均衡之选，性价比最高
+        <pre><code># Claude Code 使用的模型 (2026年2月最新)
+claude-opus-4 -> claude-opus-4.6-20260218    # Claude Opus 4.6，最强性能
+claude-sonnet-4 -> claude-sonnet-4.6-20260218 # Claude Sonnet 4.6，性价比首选
 
 # Codex 使用的模型 (2025-2026年最新)
-codex -> gpt-5                          # OpenAI 最新默认模型
-codex-4.5 -> gpt-4.5                    # 上一代模型备选
+codex -> gpt-5.3-codex                  # OpenAI Codex 最新模型
+codex-medium -> gpt-5.2-codex           # 中等规模模型备选
 
-# Gemini 使用的模型 (2025年3月最新)
-gemini-pro -> gemini-2.5-pro            # Google 最新最强模型
-gemini-flash -> gemini-2.5-flash       # 轻量快速版本</code></pre>
+# Gemini 使用的模型 (2026年最新)
+gemini-pro -> gemini-3.1-pro-latest     # Gemini 3.1 Pro，Google 最新最强
+gemini-flash -> gemini-2.5-flash-latest # Gemini 2.5 Flash，轻量快速版</code></pre>
 
         <p>具体模型名称请参考你所用 API 平台的文档。</p>
 
