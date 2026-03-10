@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>聊天及时性与转化关联分析报告 - 3.10</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif; background: #f0f2f5; color: #333; }
+  .header { background: linear-gradient(135deg, #1a73e8, #0d47a1); color: white; padding: 32px 40px; }
+  .header h1 { font-size: 26px; margin-bottom: 8px; }
+  .header p { opacity: 0.85; font-size: 14px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+  .kpi-card .num { font-size: 32px; font-weight: 700; color: #1a73e8; }
+  .kpi-card .label { font-size: 13px; color: #666; margin-top: 4px; }
+  .kpi-card .sub { font-size: 12px; color: #999; margin-top: 2px; }
+
+  .section { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+  .section h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; color: #1a1a1a; }
+  .section .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+
+  .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .chart-box { height: 360px; }
+  .chart-box-wide { height: 400px; }
+
+  .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 20px; }
+  .insight-card { border-radius: 10px; padding: 18px; border-left: 4px solid; }
+  .insight-card.green { background: #f0fdf4; border-color: #22c55e; }
+  .insight-card.blue  { background: #eff6ff; border-color: #3b82f6; }
+  .insight-card.yellow { background: #fefce8; border-color: #eab308; }
+  .insight-card.red   { background: #fef2f2; border-color: #ef4444; }
+  .insight-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .insight-card p  { font-size: 13px; color: #555; line-height: 1.6; }
+  .insight-card .highlight { font-size: 22px; font-weight: 700; color: inherit; }
+
+  .table-wrap { overflow-x: auto; margin-top: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f8f9fa; padding: 10px 14px; text-align: center; border-bottom: 2px solid #e9ecef; font-weight: 600; white-space: nowrap; }
+  td { padding: 10px 14px; text-align: center; border-bottom: 1px solid #f0f0f0; }
+  tr:hover td { background: #fafafa; }
+  .badge-green { background: #dcfce7; color: #166534; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+  .badge-red   { background: #fee2e2; color: #991b1b; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+  .badge-gray  { background: #f3f4f6; color: #374151; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+
+  @media (max-width: 768px) { .chart-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📊 聊天及时性与转化效果关联分析报告</h1>
+  <p>数据日期：2026-03-10 &nbsp;|&nbsp; 分析用户：403 人 &nbsp;|&nbsp; 聊天消息：5704 条 &nbsp;|&nbsp; 生成时间：2026-03-10 20:44</p>
+  <p style="margin-top:8px; opacity:0.75; font-size:13px;">receivedType=0 为客服发出，receivedType=1 为用户发出；sendMsgTakeUpTime 为人工回复耗时（秒）</p>
+</div>
+
+<div class="container">
+
+<!-- KPI 卡片 -->
+<div class="kpi-row">
+  <div class="kpi-card">
+    <div class="num">403</div>
+    <div class="label">分析用户总数</div>
+  </div>
+  <div class="kpi-card">
+    <div class="num" style="color:#22c55e">89</div>
+    <div class="label">有意向用户</div>
+    <div class="sub">22.1% 转化率</div>
+  </div>
+  <div class="kpi-card">
+    <div class="num" style="color:#3b82f6">8</div>
+    <div class="label">提供信息三件套</div>
+    <div class="sub">2.0%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="num" style="color:#f59e0b">6</div>
+    <div class="label">链接发送</div>
+    <div class="sub">1.5%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="num" style="color:#ef4444">3</div>
+    <div class="label">进线用户</div>
+    <div class="sub">0.7%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="num" style="color:#8b5cf6">2</div>
+    <div class="label">完单用户</div>
+    <div class="sub">0.5%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="num">403</div>
+    <div class="label">有人工回复</div>
+    <div class="sub">占 100.0%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="num" style="color:#06b6d4">403</div>
+    <div class="label">用户有回复消息</div>
+    <div class="sub">占 100.0%</div>
+  </div>
+</div>
+
+<!-- 核心洞察 -->
+<div class="section">
+  <h2>🔍 核心洞察</h2>
+  <div class="subtitle">聊天及时性对转化的关键影响</div>
+  <div class="insight-grid">
+    <div class="insight-card green">
+      <h3>✅ 最佳回复时段</h3>
+      <div class="highlight" style="color:#166534">>120秒(较慢)</div>
+      <p>该时段意向转化率最高，达 <strong>29.4%</strong>（51 人）。数据显示回复越快不一定转化越好。</p>
+    </div>
+    <div class="insight-card blue">
+      <h3>⚡ 极速回复反而最低</h3>
+      <div class="highlight" style="color:#1d4ed8">5.9%</div>
+      <p>60秒内回复的用户意向率仅 <strong>5.9%</strong>，低于整体均值 <strong>22.1%</strong>，说明极速回复可能偏向批量SOP发送，缺乏针对性。</p>
+    </div>
+    <div class="insight-card yellow">
+      <h3>💬 用户互动深度</h3>
+      <div class="highlight" style="color:#854d0e">22.1%</div>
+      <p>用户主动回复后意向率 <strong>22.1%</strong>，未回复用户为 <strong>0%</strong>，互动深度是关键指标。</p>
+    </div>
+    <div class="insight-card red">
+      <h3>⚡ 转化漏斗收缩</h3>
+      <div class="highlight" style="color:#991b1b">22.1%→0.7%</div>
+      <p>意向→进线损耗严重，89 个意向用户中仅 3 个进线，需缩短跟进时间窗口。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 图表区：分组转化率 + 漏斗 -->
+<div class="section">
+  <h2>📈 回复速度分组 × 各阶段转化率</h2>
+  <div class="subtitle">按客服平均人工回复时间分组，观察各指标的转化差异（柱状图）</div>
+  <div class="chart-grid">
+    <div id="bucketChart" class="chart-box-wide" style="grid-column: span 2;"></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>🔄 转化漏斗 & 回复方式对比</h2>
+  <div class="chart-grid">
+    <div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:12px;">整体转化漏斗</div>
+      <div id="funnelChart" class="chart-box"></div>
+    </div>
+    <div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:12px;">各时间段：用户数 vs 意向率（双轴对比）</div>
+      <div id="manualVsSopChart" class="chart-box"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 首次回复时间 vs 意向 -->
+<div class="section">
+  <h2>⏱ 首次人工回复时间 vs 意向率趋势</h2>
+  <div class="subtitle">X轴：首次人工回复耗时（秒），Y轴：该时间段内有意向的用户比例（%），气泡大小=样本量</div>
+  <div id="scatterChart" style="height:380px;"></div>
+</div>
+
+<!-- 用户消息数 vs 转化 -->
+<div class="section">
+  <h2>💬 用户消息数量 × 转化率</h2>
+  <div class="subtitle">用户发送消息越多，投入度越高，转化率是否也更高？</div>
+  <div class="chart-grid">
+    <div id="msgCountChart" class="chart-box"></div>
+    <div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:12px;">用户是否主动回复 × 各阶段转化率</div>
+      <div id="userRepliedChart" class="chart-box"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 明细数据表 -->
+<div class="section">
+  <h2>📋 回复速度分组明细数据</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>平均回复时间段</th>
+          <th>用户数</th>
+          <th>是否回复</th>
+          <th>是否意向</th>
+          <th>是否提供三件套</th>
+          <th>是否链接发送</th>
+          <th>是否进线</th>
+          <th>是否完单</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td><strong>≤60秒(极快)</strong></td>
+          <td>17</td>
+          <td><span class="badge-green">17人 (100.0%)</span></td>
+          <td><span class="badge-gray">1人 (5.9%)</span></td>
+          <td><span class="badge-gray">1人 (5.9%)</span></td>
+          <td><span class="badge-red">0人 (0.0%)</span></td>
+          <td><span class="badge-red">0人 (0.0%)</span></td>
+          <td><span class="badge-red">0人 (0.0%)</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>60-75秒(较快)</strong></td>
+          <td>14</td>
+          <td><span class="badge-green">14人 (100.0%)</span></td>
+          <td><span class="badge-gray">2人 (14.3%)</span></td>
+          <td><span class="badge-red">0人 (0.0%)</span></td>
+          <td><span class="badge-red">0人 (0.0%)</span></td>
+          <td><span class="badge-red">0人 (0.0%)</span></td>
+          <td><span class="badge-red">0人 (0.0%)</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>75-85秒(标准偏快)</strong></td>
+          <td>134</td>
+          <td><span class="badge-green">134人 (100.0%)</span></td>
+          <td><span class="badge-green">31人 (23.1%)</span></td>
+          <td><span class="badge-gray">1人 (0.7%)</span></td>
+          <td><span class="badge-gray">1人 (0.7%)</span></td>
+          <td><span class="badge-gray">1人 (0.7%)</span></td>
+          <td><span class="badge-red">0人 (0.0%)</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>85-120秒(标准)</strong></td>
+          <td>187</td>
+          <td><span class="badge-green">186人 (99.5%)</span></td>
+          <td><span class="badge-green">40人 (21.4%)</span></td>
+          <td><span class="badge-gray">4人 (2.1%)</span></td>
+          <td><span class="badge-gray">3人 (1.6%)</span></td>
+          <td><span class="badge-gray">1人 (0.5%)</span></td>
+          <td><span class="badge-gray">1人 (0.5%)</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>>120秒(较慢)</strong></td>
+          <td>51</td>
+          <td><span class="badge-green">51人 (100.0%)</span></td>
+          <td><span class="badge-green">15人 (29.4%)</span></td>
+          <td><span class="badge-gray">2人 (3.9%)</span></td>
+          <td><span class="badge-gray">2人 (3.9%)</span></td>
+          <td><span class="badge-gray">1人 (2.0%)</span></td>
+          <td><span class="badge-gray">1人 (2.0%)</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 结论与建议 -->
+<div class="section">
+  <h2>💡 结论与建议</h2>
+  <div class="insight-grid">
+    <div class="insight-card green">
+      <h3>📌 "慢而精"比"快而泛"效果更好</h3>
+      <p>数据显示极速回复（≤60s）意向率最低（5.9%），而 <strong>>120秒(较慢)</strong> 的意向率最高（29.4%）。建议客服避免批量快速SOP群发，优先针对有互动的用户做有质量的个性化回复。</p>
+    </div>
+    <div class="insight-card blue">
+      <h3>📌 抓住"黄金互动窗口"</h3>
+      <p>回复时间集中在75-120秒（占全部用户的79.7%），此区间意向率接近整体均值。建议在用户初次回复后 <strong>90秒内</strong> 给出个性化跟进内容，而不是即时自动回复。</p>
+    </div>
+    <div class="insight-card yellow">
+      <h3>📌 意向→进线的断层</h3>
+      <p>89个意向用户中仅3人进线（3.4%），建议在用户表达意向后<strong>立即</strong>推送链接或引导进线，不要延误。</p>
+    </div>
+    <div class="insight-card red">
+      <h3>📌 三件套收集的时机</h3>
+      <p>仅 8 人提供三件套信息（2.0%），说明多数对话在收集完整信息前中断。应在用户互动热情高时（有来回2-3轮后）及时引导收集。</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ─── 1. 分组转化率柱状图 ───
+var bucketChart = echarts.init(document.getElementById('bucketChart'));
+var bucketOption = {
+  tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+  legend: { data: ["\u662f\u5426\u610f\u5411", "\u662f\u5426\u63d0\u4f9b\u4fe1\u606f\u4e09\u4ef6\u5957", "\u662f\u5426\u94fe\u63a5\u53d1\u9001", "\u662f\u5426\u8fdb\u7ebf", "\u662f\u5426\u5b8c\u5355"], top: 0 },
+  grid: { left: '3%', right: '4%', bottom: '3%', top: '60px', containLabel: true },
+  xAxis: {
+    type: 'category',
+    data: ["\u226460\u79d2(\u6781\u5feb)", "60-75\u79d2(\u8f83\u5feb)", "75-85\u79d2(\u6807\u51c6\u504f\u5feb)", "85-120\u79d2(\u6807\u51c6)", ">120\u79d2(\u8f83\u6162)"],
+    axisLabel: { fontSize: 12 }
+  },
+  yAxis: {
+    type: 'value',
+    name: '转化率(%)',
+    axisLabel: { formatter: '{value}%' }
+  },
+  series: [
+    {
+      name: '是否意向',
+      type: 'bar',
+      barMaxWidth: 40,
+      data: [5.9, 14.3, 23.1, 21.4, 29.4],
+      itemStyle: { color: '#5470c6' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 10 }
+    },{
+      name: '是否提供信息三件套',
+      type: 'bar',
+      barMaxWidth: 40,
+      data: [5.9, 0.0, 0.7, 2.1, 3.9],
+      itemStyle: { color: '#91cc75' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 10 }
+    },{
+      name: '是否链接发送',
+      type: 'bar',
+      barMaxWidth: 40,
+      data: [0.0, 0.0, 0.7, 1.6, 3.9],
+      itemStyle: { color: '#fac858' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 10 }
+    },{
+      name: '是否进线',
+      type: 'bar',
+      barMaxWidth: 40,
+      data: [0.0, 0.0, 0.7, 0.5, 2.0],
+      itemStyle: { color: '#ee6666' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 10 }
+    },{
+      name: '是否完单',
+      type: 'bar',
+      barMaxWidth: 40,
+      data: [0.0, 0.0, 0.0, 0.5, 2.0],
+      itemStyle: { color: '#73c0de' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 10 }
+    }
+  ]
+};
+bucketChart.setOption(bucketOption);
+
+// 同时显示每组人数
+var countSeries = {
+  name: '用户数',
+  type: 'line',
+  yAxisIndex: 1,
+  data: [17, 14, 134, 187, 51],
+  symbol: 'circle',
+  symbolSize: 8,
+  lineStyle: { color: '#aaa', type: 'dashed' },
+  label: { show: true, formatter: '{c}人', fontSize: 10 }
+};
+bucketOption.yAxis = [
+  { type: 'value', name: '转化率(%)', axisLabel: { formatter: '{value}%' } },
+  { type: 'value', name: '用户数', splitLine: { show: false } }
+];
+bucketOption.series.push({ ...countSeries, yAxisIndex: 1 });
+bucketChart.setOption(bucketOption);
+
+// ─── 2. 漏斗图 ───
+var funnelChart = echarts.init(document.getElementById('funnelChart'));
+funnelChart.setOption({
+  tooltip: { trigger: 'item', formatter: '{b}: {c}人 ({d}%)' },
+  series: [{
+    type: 'funnel',
+    left: '5%', width: '90%',
+    label: { show: true, position: 'inside', formatter: '{b}\n{c}人' },
+    data: [{"name": "\u662f\u5426\u56de\u590d", "value": 402}, {"name": "\u662f\u5426\u610f\u5411", "value": 89}, {"name": "\u662f\u5426\u63d0\u4f9b\u4fe1\u606f\u4e09\u4ef6\u5957", "value": 8}, {"name": "\u662f\u5426\u94fe\u63a5\u53d1\u9001", "value": 6}, {"name": "\u662f\u5426\u8fdb\u7ebf", "value": 3}, {"name": "\u662f\u5426\u5b8c\u5355", "value": 2}],
+    color: ['#5470c6','#91cc75','#fac858','#ee6666','#73c0de','#3ba272'],
+    sort: 'none'
+  }]
+});
+
+// ─── 3. 时间段用户数 vs 意向率 双轴图 ───
+var manualVsSopChart = echarts.init(document.getElementById('manualVsSopChart'));
+var activeBuckets = ["\u226460\u79d2(\u6781\u5feb)", "60-75\u79d2(\u8f83\u5feb)", "75-85\u79d2(\u6807\u51c6\u504f\u5feb)", "85-120\u79d2(\u6807\u51c6)", ">120\u79d2(\u8f83\u6162)"];
+var bucketUserCounts = [17, 14, 134, 187, 51];
+var bucketIntentRates = [5.9, 14.3, 23.1, 21.4, 29.4];
+manualVsSopChart.setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['用户人数', '意向转化率'], top: 0 },
+  grid: { left: '3%', right: '8%', bottom: '3%', top: '50px', containLabel: true },
+  xAxis: { type: 'category', data: activeBuckets, axisLabel: { rotate: 20, fontSize: 11 } },
+  yAxis: [
+    { type: 'value', name: '人数', position: 'left' },
+    { type: 'value', name: '意向率%', position: 'right', axisLabel: { formatter: '{value}%' } }
+  ],
+  series: [
+    { name: '用户人数', type: 'bar', data: bucketUserCounts, barMaxWidth: 45, itemStyle: { color: '#93c5fd' }, label: { show: true, position: 'top', formatter: '{c}人', fontSize: 10 } },
+    { name: '意向转化率', type: 'line', yAxisIndex: 1, data: bucketIntentRates, symbol: 'circle', symbolSize: 10, lineStyle: { color: '#f97316', width: 3 }, itemStyle: { color: '#f97316' }, label: { show: true, formatter: '{c}%', fontSize: 11, color: '#ea580c' } }
+  ]
+});
+
+// ─── 4. 散点图：首次回复时间 vs 意向率 ───
+var scatterChart = echarts.init(document.getElementById('scatterChart'));
+var scatterData = [[30, 12.1, 165], [60, 22.8, 1250], [90, 18.9, 370], [120, 21.7, 115], [150, 33.3, 15], [180, 0.0, 10], [210, 100.0, 10], [540, 25.0, 20]];
+scatterChart.setOption({
+  tooltip: {
+    formatter: function(p) {
+      return '首次回复: ' + p.data[0] + 's<br/>意向率: ' + p.data[1] + '%<br/>样本: ' + Math.round(p.data[2]/5) + '人';
+    }
+  },
+  xAxis: { type: 'value', name: '首次人工回复时间(秒)', nameLocation: 'end' },
+  yAxis: { type: 'value', name: '意向率(%)', axisLabel: { formatter: '{value}%' } },
+  series: [{
+    type: 'scatter',
+    symbolSize: function(d) { return d[2]; },
+    data: scatterData,
+    itemStyle: { color: '#5470c6', opacity: 0.7 },
+    label: { show: true, position: 'top', formatter: function(p) { return p.data[1] + '%'; }, fontSize: 11 }
+  }]
+});
+
+// ─── 5. 用户消息数 vs 转化率 ───
+var msgCountChart = echarts.init(document.getElementById('msgCountChart'));
+msgCountChart.setOption({
+  title: { text: '用户消息数量 × 转化率', textStyle: { fontSize: 14, fontWeight: 600 } },
+  tooltip: { trigger: 'axis' },
+  legend: { data: ['是否意向','是否进线','是否完单'], top: 30 },
+  grid: { left: '3%', right: '4%', bottom: '3%', top: '80px', containLabel: true },
+  xAxis: { type: 'category', data: ["1-2\u6761", "3-5\u6761", "6-10\u6761", ">10\u6761"] },
+  yAxis: { type: 'value', axisLabel: { formatter: '{value}%' } },
+  series: [
+    {
+      name: '是否意向',
+      type: 'line',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 8,
+      data: [20.8, 27.2, 17.6, 0.0],
+      label: { show: true, formatter: '{c}%' }
+    },{
+      name: '是否进线',
+      type: 'line',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 8,
+      data: [0.0, 2.9, 0.0, 0.0],
+      label: { show: true, formatter: '{c}%' }
+    },{
+      name: '是否完单',
+      type: 'line',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 8,
+      data: [0.0, 1.9, 0.0, 0.0],
+      label: { show: true, formatter: '{c}%' }
+    }
+  ]
+});
+
+// ─── 6. 用户是否回复 × 各阶段 ───
+var userRepliedLabels = ["\u7528\u6237\u6709\u56de\u590d", "\u7528\u6237\u672a\u56de\u590d"];
+var userRepliedChart = echarts.init(document.getElementById('userRepliedChart'));
+userRepliedChart.setOption({
+  tooltip: { trigger: 'axis' },
+  legend: { data: ["\u662f\u5426\u610f\u5411", "\u662f\u5426\u63d0\u4f9b\u4fe1\u606f\u4e09\u4ef6\u5957", "\u662f\u5426\u94fe\u63a5\u53d1\u9001", "\u662f\u5426\u8fdb\u7ebf", "\u662f\u5426\u5b8c\u5355"], top: 0 },
+  grid: { left: '3%', right: '4%', bottom: '3%', top: '60px', containLabel: true },
+  xAxis: { type: 'category', data: userRepliedLabels },
+  yAxis: { type: 'value', axisLabel: { formatter: '{value}%' } },
+  series: [
+    {
+      name: '是否意向',
+      type: 'bar',
+      barMaxWidth: 60,
+      data: [22.1, 0],
+      itemStyle: { color: '#5470c6' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 11 }
+    },{
+      name: '是否提供信息三件套',
+      type: 'bar',
+      barMaxWidth: 60,
+      data: [2.0, 0],
+      itemStyle: { color: '#91cc75' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 11 }
+    },{
+      name: '是否链接发送',
+      type: 'bar',
+      barMaxWidth: 60,
+      data: [1.5, 0],
+      itemStyle: { color: '#fac858' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 11 }
+    },{
+      name: '是否进线',
+      type: 'bar',
+      barMaxWidth: 60,
+      data: [0.7, 0],
+      itemStyle: { color: '#ee6666' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 11 }
+    },{
+      name: '是否完单',
+      type: 'bar',
+      barMaxWidth: 60,
+      data: [0.5, 0],
+      itemStyle: { color: '#73c0de' },
+      label: { show: true, position: 'top', formatter: '{c}%', fontSize: 11 }
+    }
+  ]
+});
+
+window.addEventListener('resize', function() {
+  bucketChart.resize(); funnelChart.resize(); manualVsSopChart.resize();
+  scatterChart.resize(); msgCountChart.resize(); userRepliedChart.resize();
+});
+</script>
+</body>
+</html>
