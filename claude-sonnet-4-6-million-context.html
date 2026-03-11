@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实测Claude Sonnet 4.6百万上下文：我扔了一整个项目进去，结果...</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --text-color: #1f2937;
+            --bg-color: #f9fafb;
+            --code-bg: #1e293b;
+            --border-color: #e5e7eb;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background: var(--bg-color);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        article {
+            background: white;
+            padding: 48px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.3;
+            color: #111827;
+        }
+        .meta {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 40px 0 20px;
+            color: #111827;
+        }
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 32px 0 16px;
+            color: #1f2937;
+        }
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        p code {
+            background: #f3f4f6;
+            color: #db2777;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 20px;
+            margin: 24px 0;
+            color: #4b5563;
+            font-style: italic;
+        }
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 40px 0;
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        @media (max-width: 640px) {
+            article {
+                padding: 24px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <article>
+            <h1>实测Claude Sonnet 4.6百万上下文：我扔了一整个项目进去，结果...</h1>
+            <div class="meta">发布于 2026年3月12日 · AI编程 · Claude</div>
+
+            <p>说实话，我一开始是拒绝用Claude的。</p>
+
+            <p>作为一个从GPT-3.5时代就开始用AI辅助编程的人，我已经习惯了"分段投喂"的工作流——把代码切成一小块一小块，小心翼翼地控制上下文长度，生怕超出限制。这种体验，怎么说呢，就像是在用一个只有7秒记忆的金鱼当助手。</p>
+
+            <p>直到上周，Anthropic发布了Claude Sonnet 4.6。</p>
+
+            <p>百万Token上下文窗口。什么概念？</p>
+
+            <ul>
+                <li>整个Linux内核代码库？能装下。</li>
+                <li>一本《战争与和平》？能装下。</li>
+                <li>我那个祖传屎山项目？绰绰有余。</li>
+            </ul>
+
+            <p>我决定做个实验：把我手头一个3万行代码的中型项目直接扔进去，看看会发生什么。</p>
+
+            <h2>实验准备：拿到API Key的曲折路</h2>
+
+            <p>先说前提，想测试Sonnet 4.6，你得先能调用它。</p>
+
+            <p>Anthropic的API在国内访问不太友好，直接请求经常超时或者干脆连不上。而且他们的API Key申请还有点门槛，新账号经常遇到各种限制。</p>
+
+            <p>我折腾了半天，最后决定用一个国内的中转API服务——KL-API。这个是我之前做项目时用过的，主要优势是：</p>
+
+            <ul>
+                <li>国内节点，延迟低</li>
+                <li>支持Claude全系列模型，包括最新的Sonnet 4.6</li>
+                <li>价格透明，按官方汇率结算</li>
+                <li>不需要特殊网络环境</li>
+            </ul>
+
+            <p>配置也很简单，就改一下base URL和api key：</p>
+
+            <pre><code>import openai
+
+# 原来是直接调Anthropic
+# client = anthropic.Anthropic(api_key="sk-ant-xxxxx")
+
+# 改用KL-API中转
+client = openai.OpenAI(
+    api_key="sk-你的KL-API-Key",
+    base_url="https://api.klai.top/v1"  # KL-API的中转地址
+)
+
+# 然后就可以正常调用了
+response = client.chat.completions.create(
+    model="claude-sonnet-4.6",
+    messages=[
+        {"role": "user", "content": "帮我分析这段代码..."}
+    ],
+    max_tokens=8192
+)</code></pre>
+
+            <p>关于KL-API的注册和使用，有兴趣的可以自行搜索，这里就不展开广告了。主要是解决了我的访问问题，继续往下说实验。</p>
+
+            <h2>实验一：整项目代码分析</h2>
+
+            <p>我的测试项目是一个基于FastAPI的后端服务，大概3万多行Python代码，分布在40多个文件里。</p>
+
+            <p>以前用GPT-4的时候，我得一个文件一个文件地喂，还要自己记着"这个函数在utils.py里定义了，在service.py里被调用了"。Sonnet 4.6不是号称百万上下文吗？我直接把整个项目的代码打包成一个请求。</p>
+
+            <p>具体操作：</p>
+
+            <pre><code># 把整个项目目录的文件内容合并
+find . -name "*.py" -type f | head -50 | xargs cat > project_dump.txt
+# 结果：大概8万多个Token</code></pre>
+
+            <p>然后我发了这个请求：</p>
+
+            <blockquote>
+                下面是一个完整的Python项目代码，请帮我：<br>
+                1. 分析项目的整体架构和模块划分<br>
+                2. 找出潜在的代码质量问题<br>
+                3. 识别是否有重复代码可以重构<br>
+                <br>
+                [此处粘贴8万Token的代码]
+            </blockquote>
+
+            <p>等了大概30秒（比我想象的快），Claude的回复让我惊了。</p>
+
+            <p>它不仅能准确识别出这是一个FastAPI项目，还详细分析了：</p>
+
+            <ul>
+                <li>路由层、服务层、数据层的划分</li>
+                <li>使用了SQLAlchemy作为ORM</li>
+                <li>采用了依赖注入模式</li>
+            </ul>
+
+            <p>关键是，它发现了3处我自己都没注意到的代码异味：</p>
+
+            <ol>
+                <li><strong>循环导入隐患</strong>：<code>models/user.py</code>和<code>schemas/user.py</code>之间有隐式循环依赖</li>
+                <li><strong>重复的错误处理逻辑</strong>：5个不同的路由文件里都写了几乎一样的try-except块</li>
+                <li><strong>未使用的配置项</strong>：<code>config.py</code>里定义了3个环境变量，但在代码里根本没用到</li>
+            </ol>
+
+            <p>最骚的是，它还给出了具体的重构建议，包括代码示例。</p>
+
+            <h3>关键发现：长上下文不是"能装"，而是"能懂"</h3>
+
+            <p>以前我以为长上下文就是"能把更多文字塞进去"，这次测试让我明白，真正的价值在于<strong>跨文件的关联理解</strong>。</p>
+
+            <p>Sonnet 4.6能够在一个对话里同时看到：</p>
+
+            <ul>
+                <li>数据模型的定义（models/）</li>
+                <li>业务逻辑的实现（services/）</li>
+                <li>API接口的暴露（routers/）</li>
+                <li>配置和工具函数（config/, utils/）</li>
+            </ul>
+
+            <p>这种全局视角，让它能发现那种"单看一个文件完全看不出来"的问题。</p>
+
+            <h2>实验二：批量代码审查</h2>
+
+            <p>第二个实验更实用：我有一堆PR要审。</p>
+
+            <p>我们团队用GitHub，每次发PR都要人工审查。但有些PR改动特别大，涉及十几个文件，几百行变更。这种PR审起来很头疼，经常是"看了后面忘了前面"。</p>
+
+            <p>Sonnet 4.6的百万上下文在这里又派上用场了。我可以直接把整个PR的diff打包发给它：</p>
+
+            <pre><code>import requests
+
+# 获取PR的diff
+pr_diff = requests.get(
+    f"https://api.github.com/repos/{owner}/{repo}/pulls/{pr_number}",
+    headers={"Accept": "application/vnd.github.v3.diff"}
+).text
+
+# 直接发给Claude
+review_prompt = f"""
+请审查以下Pull Request的代码变更：
+
+{pr_diff}
+
+请从以下维度给出审查意见：
+1. 是否有明显的bug或逻辑错误
+2. 代码风格是否一致
+3. 是否有性能隐患
+4. 测试是否充分
+5. 总体评价（Approve / Request Changes / Comment）
+"""
+
+response = client.chat.completions.create(
+    model="claude-sonnet-4.6",
+    messages=[{"role": "user", "content": review_prompt}],
+    max_tokens=4096
+)</code></pre>
+
+            <p>我测试了5个真实的PR，结果：</p>
+
+            <ul>
+                <li><strong>3个PR</strong>：Claude发现的问题和人工审查基本一致，还额外指出了2个小问题</li>
+                <li><strong>1个PR</strong>：它发现了一个边界条件处理不当的问题，我们人类审查者都漏掉了</li>
+                <li><strong>1个PR</strong>：误报了一个"问题"，实际上那个设计是刻意的</li>
+            </ul>
+
+            <p>准确率大概80%左右，作为辅助工具已经很实用了。</p>
+
+            <h2>实验三：遗留代码理解</h2>
+
+            <p>最后一个实验是最让我印象深刻的。</p>
+
+            <p>我们公司有一个祖传项目，是5年前的前辈写的，用的还是Python 2时代的风格。文档基本没有，注释约等于零，变量命名像是键盘上滚出来的。</p>
+
+            <p>以前每次要改这个项目的bug，我都得先花半天时间"考古"，试图理解代码到底在干什么。</p>
+
+            <p>这次我把整个项目的代码（大概5万Token）直接发给Sonnet 4.6，问：</p>
+
+            <blockquote>
+                这个项目是做什么的？数据流是怎么走的？有哪些核心业务逻辑？
+            </blockquote>
+
+            <p>15秒后，我得到了一份比官方文档还清晰的说明：</p>
+
+            <ul>
+                <li><strong>项目定位</strong>：这是一个数据处理管道，负责从多个数据源采集数据，进行清洗转换，然后输出到下游系统</li>
+                <li><strong>核心流程</strong>：采集 → 校验 → 转换 → 分发，四个阶段</li>
+                <li><strong>关键类</strong>：DataSource、Validator、Transformer、Dispatcher</li>
+                <li><strong>扩展点</strong>：如果需要添加新的数据源，应该继承DataSource类并重写fetch方法</li>
+            </ul>
+
+            <p>它甚至画了一个ASCII流程图（虽然丑但看得懂）。</p>
+
+            <h2>使用成本：比你想象的便宜</h2>
+
+            <p>说了这么多优点，肯定有人关心价格。</p>
+
+            <p>Claude Sonnet 4.6的定价：</p>
+
+            <ul>
+                <li>输入：$3 / 百万Token</li>
+                <li>输出：$15 / 百万Token</li>
+            </ul>
+
+            <p>百万上下文听起来吓人，但实际使用中有几个省成本的技巧：</p>
+
+            <p><strong>1. 不是所有请求都需要百万上下文</strong></p>
+
+            <p>大部分日常对话用默认的200K就够了，只有需要分析大量代码或文档时才开1M。</p>
+
+            <p><strong>2. Context Compaction（上下文压缩）</strong></p>
+
+            <p>Anthropic在beta版里加了这个功能，当对话接近限制时会自动总结旧上下文，有效延长可用长度。</p>
+
+            <p><strong>3. 批量处理更高效</strong></p>
+
+            <p>如果需要分析多个文件，一次性打包发送比分多次询问更省Token（因为不用重复发送系统提示）。</p>
+
+            <p>我测试了大约20轮对话，总花费大概$2左右，算下来比雇一个实习生便宜多了（而且不用管饭）。</p>
+
+            <h2>局限性和注意事项</h2>
+
+            <p>当然，Sonnet 4.6也不是万能的，有几个地方需要注意：</p>
+
+            <p><strong>1. 百万上下文目前还是beta</strong></p>
+
+            <p>最大输出Token限制在64K，而且不是所有功能都稳定。生产环境用的话建议先测试。</p>
+
+            <p><strong>2. 延迟问题</strong></p>
+
+            <p>处理长上下文确实需要时间。我测试的8万Token请求，平均响应时间在20-40秒。如果是实时交互场景，可能需要优化一下体验。</p>
+
+            <p><strong>3. 不是Token越多越好</strong></p>
+
+            <p>有时候给太多无关内容反而会干扰模型的判断。建议只发送相关文件，或者先做个目录结构说明。</p>
+
+            <p><strong>4. API稳定性</strong></p>
+
+            <p>国内直接调Anthropic的API经常抽风，建议用可靠的中转服务（像我上面提到的KL-API），或者自己搭代理。</p>
+
+            <h2>写在最后</h2>
+
+            <p>用了两周Claude Sonnet 4.6，我的感受是：<strong>这玩意儿真的改变了我的工作流</strong>。</p>
+
+            <p>以前用AI辅助编程，本质上是"我有一个小任务，AI帮我写段代码"。现在是"我有一个复杂项目，AI帮我理解、分析、优化"。</p>
+
+            <p>从"代码生成器"到"代码理解者"，这个转变的意义可能比想象中更大。</p>
+
+            <p>如果你还没试过Sonnet 4.6的百万上下文，我建议找个自己的项目测试一下。那种"把整个代码库扔给AI然后问问题"的体验，真的很不一样。</p>
+
+            <p>最后，关于KL-API的使用，如果你有国内调用Claude系列模型的需求，可以尝试一下。毕竟工具是为人服务的，能解决问题才是王道。</p>
+
+            <hr>
+
+            <p><strong>参考链接：</strong></p>
+            <ul>
+                <li><a href="https://www.anthropic.com/news/claude-sonnet-4-6">Claude Sonnet 4.6 官方发布说明</a></li>
+                <li><a href="https://docs.anthropic.com/">Anthropic API文档</a></li>
+            </ul>
+
+            <hr>
+
+            <p style="color: #6b7280; font-size: 0.9rem;">本文首发于个人博客，转载请注明出处。</p>
+        </article>
+    </div>
+</body>
+</html>
