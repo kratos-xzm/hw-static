@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Sonnet 4.6 + Agent Teams实战：从配置到多智能体协作开发</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #fafafa;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --code-bg: #f3f4f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+        
+        header .meta {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        article {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        
+        .article-image {
+            width: 100%;
+            border-radius: 12px;
+            margin: 24px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .image-caption {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: -16px;
+            margin-bottom: 24px;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            margin: 40px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+            color: var(--primary-dark);
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            margin: 30px 0 15px;
+            color: var(--text);
+        }
+        
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+        
+        blockquote {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid var(--primary);
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        
+        code {
+            background: var(--code-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            color: #d63384;
+        }
+        
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.95rem;
+        }
+        
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        tr:hover {
+            background: var(--bg);
+        }
+        
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 28px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #f59e0b;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 1px solid var(--primary);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 1px solid #ef4444;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 1px solid #10b981;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+        
+        .step {
+            background: var(--bg);
+            padding: 24px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .step h4 {
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+        }
+        
+        .file-path {
+            background: #1e293b;
+            color: #7dd3fc;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background: var(--border);
+            margin: 40px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 24px 0;
+        }
+        
+        @media (max-width: 640px) {
+            header h1 {
+                font-size: 1.6rem;
+            }
+            
+            article {
+                padding: 24px;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Claude Sonnet 4.6 + Agent Teams实战</h1>
+        <p class="meta">从配置到多智能体协作开发 | 2026年3月</p>
+    </header>
+    
+    <div class="container">
+        <article>
+            <blockquote>
+                搞了两周，终于把Claude Sonnet 4.6的Agent Teams跑通了。这篇文章记录一下踩坑过程，顺便聊聊2026年AI编程的新趋势。
+            </blockquote>
+            
+            <h2>一、为啥折腾这个？</h2>
+            <p>说实话，之前用Claude Code都是单打独斗。一个Agent吭哧吭哧干半天，遇到复杂项目还是得自己切来切去。</p>
+            <p>直到看到Anthropic 2月份发布的Sonnet 4.6和Agent Teams功能，我才意识到：<strong>AI编程进入"团队作战"时代了</strong>。</p>
+            <p>简单说就是：你可以同时启动多个Claude Agent，让它们像真正的开发团队一样分工协作。一个写前端，一个写后端，一个写测试，还能互相Review代码。</p>
+            <p>这不就是我们 dreamed of 的"AI外包团队"吗？</p>
+            
+            <h2>二、Claude Sonnet 4.6 新特性速览</h2>
+            <p>在聊Agent Teams之前，先快速过一下Sonnet 4.6的亮点（毕竟要用它才能开Agent Teams）：</p>
+            
+            <h3>1. 1M Token上下文窗口（Beta）</h3>
+            <p>这是Sonnet系列第一次支持百万级上下文。啥概念？</p>
+            <ul>
+                <li>可以一次性扔给它整个代码库</li>
+                <li>可以分析几百页的需求文档</li>
+                <li>长程规划能力大幅提升，幻觉明显减少</li>
+            </ul>
+            <p>实测下来，处理我们公司的中后端项目（约5万行代码），响应速度依然很快。</p>
+            
+            <div class="info-box">
+                <strong>💡 上下文窗口对比</strong>
+                <table style="margin: 12px 0;">
+                    <tr>
+                        <th>模型</th>
+                        <th>上下文窗口</th>
+                        <th>代码库处理</th>
+                    </tr>
+                    <tr>
+                        <td>Claude 3.5 Sonnet</td>
+                        <td>200K</td>
+                        <td>中小型项目</td>
+                    </tr>
+                    <tr>
+                        <td>Claude Opus 4.5</td>
+                        <td>200K</td>
+                        <td>中型项目</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Claude Sonnet 4.6</strong></td>
+                        <td><strong>1M</strong></td>
+                        <td><strong>大型项目</strong></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <h3>2. 编码能力暴涨：SWE-bench 79.6%</h3>
+            <p>Sonnet 4.6在SWE-bench Verified测试中获得79.6%的得分，超过了之前的旗舰模型Opus 4.5。</p>
+            <p><strong>实际体验：</strong></p>
+            <ul>
+                <li>代码理解更深，能抓住业务逻辑</li>
+                <li>Bug修复成功率明显提高</li>
+                <li>生成的代码更规范，review通过率↑</li>
+            </ul>
+            
+            <h3>3. Agent规划与执行能力</h3>
+            <p>这是Agent Teams的基础。Sonnet 4.6在以下方面表现优异：</p>
+            <ul>
+                <li><strong>指令遵循</strong>：复杂多步骤任务执行更可靠</li>
+                <li><strong>工具选择</strong>：能自动选择合适工具，减少无效操作</li>
+                <li><strong>错误纠正</strong>：遇到报错能自己分析原因并修复</li>
+            </ul>
+            
+            <h3>4. 增强的计算机使用能力</h3>
+            <p>OSWorld基准测试得分72.5%，这意味着：</p>
+            <ul>
+                <li>浏览器自动化更稳定</li>
+                <li>可以处理复杂的Web表单</li>
+                <li>电子表格操作、数据录入都能干</li>
+            </ul>
+            
+            <h2>三、Agent Teams 是什么？</h2>
+            <p>好，进入正题。</p>
+            <p>Agent Teams是Claude Code在2026年2月推出的实验性功能，核心思想很简单：</p>
+            <blockquote>
+                让多个AI Agent像人类团队一样协作完成任务。
+            </blockquote>
+            
+            <h3>它能干啥？</h3>
+            <p>举几个实际场景：</p>
+            
+            <div class="info-box">
+                <strong>场景1：全栈开发</strong>
+                <ul>
+                    <li>Agent A：负责前端组件开发</li>
+                    <li>Agent B：负责后端API设计</li>
+                    <li>Agent C：负责数据库Schema</li>
+                    <li>三者并行工作，最后集成测试</li>
+                </ul>
+            </div>
+            
+            <div class="info-box">
+                <strong>场景2：代码重构</strong>
+                <ul>
+                    <li>Agent A：分析旧代码，提取公共模块</li>
+                    <li>Agent B：重写业务逻辑</li>
+                    <li>Agent C：写单元测试覆盖</li>
+                    <li>同时开工，效率翻3倍</li>
+                </ul>
+            </div>
+            
+            <div class="info-box">
+                <strong>场景3：Bug修复</strong>
+                <ul>
+                    <li>Agent A：定位Bug根因</li>
+                    <li>Agent B：编写修复方案</li>
+                    <li>Agent C：验证修复是否影响其他模块</li>
+                    <li>分工明确，不互相阻塞</li>
+                </ul>
+            </div>
+            
+            <h3>跟单Agent比有啥优势？</h3>
+            <table>
+                <tr>
+                    <th>维度</th>
+                    <th>单Agent</th>
+                    <th>Agent Teams</th>
+                </tr>
+                <tr>
+                    <td>并行度</td>
+                    <td>串行，一个一个来</td>
+                    <td>并行，多路同时推进</td>
+                </tr>
+                <tr>
+                    <td>专业化</td>
+                    <td>一个模型干所有</td>
+                    <td>不同Agent专注不同领域</td>
+                </tr>
+                <tr>
+                    <td>容错性</td>
+                    <td>出错就卡住</td>
+                    <td>可以回滚、重试、换Agent</td>
+                </tr>
+                <tr>
+                    <td>可扩展性</td>
+                    <td>受限于单机器</td>
+                    <td>理论上可以无限扩展</td>
+                </tr>
+            </table>
+            
+            <h2>四、实战：配置Claude Sonnet 4.6 + Agent Teams</h2>
+            <p>好了，说了这么多，上硬货。</p>
+            
+            <div class="highlight-box">
+                <strong>前置条件</strong><br>
+                你需要：<br>
+                1. Claude Code CLI（最新版 v2.1.72+）<br>
+                2. Anthropic API Key（支持Sonnet 4.6）<br>
+                3. 开启Agent Teams实验性功能<br>
+                4. tmux 或 iTerm2（用于分屏显示，可选）
+            </div>
+            
+            <div class="step">
+                <h4>Step 1：安装/更新Claude Code</h4>
+                <p>首先确保你安装了最新版 Claude Code：</p>
+                <pre><code># 如果已安装，先更新
+npm update -g @anthropic-ai/claude-code
+
+# 如果未安装
+npm install -g @anthropic-ai/claude-code
+
+# 验证版本
+claude --version
+# 应该显示 2.1.72 或更高版本</code></pre>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2：配置API Key（关键步骤）</h4>
+                <p>Claude Code 支持通过配置文件设置API Key，这样就不用在每次启动时手动输入。</p>
+                
+                <div class="warning-box">
+                    <strong>⚠️ 国内访问注意</strong><br>
+                    Anthropic官方API在国内访问不太稳定，而且价格较高（$3/1M输入tokens）。建议使用KL-API中转，价格约为官方的6-7折，且国内访问速度更快。
+                </div>
+                
+                <p><strong>创建配置文件：</strong></p>
+                <pre><code># 创建配置目录（如果不存在）
+mkdir -p ~/.claude
+
+# 创建配置文件
+touch ~/.claude/config.json</code></pre>
+                
+                <p><strong>编辑 <span class="file-path">~/.claude/config.json</span>：</strong></p>
+                <pre><code>{
+  "api_key": "sk-xxxxx",
+  "api_base": "https://api.kl-api.com/v1"
+}</code></pre>
+                
+                <p>说明：</p>
+                <ul>
+                    <li><code>api_key</code>：你的KL-API密钥（从KL-API控制台获取）</li>
+                    <li><code>api_base</code>：API中转地址，使用KL-API时填写 <code>https://api.kl-api.com/v1</code></li>
+                </ul>
+                
+                <div class="success-box">
+                    <strong>✅ 验证配置</strong><br>
+                    启动 Claude Code，如果能正常连接并显示模型列表，说明配置成功。
+                </div>
+            </div>
+            
+            <div class="step">
+                <h4>Step 3：启用Agent Teams实验性功能</h4>
+                <p>Agent Teams 是实验性功能，需要在配置文件中手动启用。</p>
+                
+                <p><strong>编辑 <span class="file-path">~/.claude/settings.json</span>：</strong></p>
+                <pre><code>{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "teammateMode": "auto"
+}</code></pre>
+                
+                <p>配置说明：</p>
+                <ul>
+                    <li><code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code>：启用Agent Teams功能（必须设置为"1"）</li>
+                    <li><code>teammateMode</code>：显示模式
+                        <ul>
+                            <li><code>auto</code>：自动检测（如果在tmux会话中则使用分屏，否则使用进程内模式）</li>
+                            <li><code>in-process</code>：进程内模式（所有Agent在同一个终端，用Shift+Down切换）</li>
+                            <li><code>tmux</code>：tmux分屏模式（每个Agent一个独立窗口）</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <div class="info-box">
+                    <strong>💡 关于 teammateMode</strong><br>
+                    如果你使用 tmux 或 iTerm2，建议使用分屏模式，可以同时看到所有Agent的输出。否则使用默认的 in-process 模式也可以。
+                </div>
+            </div>
+            
+            <div class="step">
+                <h4>Step 4：安装 tmux（可选，用于分屏显示）</h4>
+                <p>如果你想同时看到所有Agent的输出，建议安装 tmux：</p>
+                
+                <pre><code># macOS
+brew install tmux
+
+# Ubuntu/Debian
+sudo apt-get install tmux
+
+# Windows (使用 WSL)
+sudo apt-get install tmux</code></pre>
+                
+                <p>验证安装：</p>
+                <pre><code>tmux -V
+# 应该显示版本号，如 tmux 3.4</code></pre>
+            </div>
+            
+            <div class="step">
+                <h4>Step 5：启动Agent Teams</h4>
+                <p>进入你的项目目录，启动 Claude Code：</p>
+                
+                <p><strong>方式1：进程内模式（最简单）</strong></p>
+                <pre><code>cd /path/to/your/project
+claude</code></pre>
+                <p>然后输入指令创建Agent Team：</p>
+                <pre><code>> 创建一个3人Agent Team来开发用户管理系统</code></pre>
+                
+                <p><strong>方式2：tmux分屏模式（推荐）</strong></p>
+                <pre><code># 先进入tmux会话
+tmux new -s claude-team
+
+# 启动Claude Code
+claude
+
+# 或者直接在启动时指定模式
+claude --teammate-mode tmux</code></pre>
+                
+                <p>如果使用 tmux 分屏模式，你会看到类似这样的界面：</p>
+                <ul>
+                    <li>左侧：Team Lead（主Agent，负责协调）</li>
+                    <li>右上：Agent #1（前端开发）</li>
+                    <li>右中：Agent #2（后端开发）</li>
+                    <li>右下：Agent #3（测试）</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <h4>Step 6：给Agent Team分配任务</h4>
+                <p>Claude Code会自动创建Team Lead，然后你需要告诉它具体任务：</p>
+                
+                <pre><code>> 我需要开发一个用户管理系统，包含：
+> 1. 前端登录/注册页面（Agent #1负责）
+> 2. 后端REST API，支持JWT认证（Agent #2负责）
+> 3. 单元测试，覆盖率>80%（Agent #3负责）
+> 
+> 各Agent并行开发，完成后互相Review</code></pre>
+                
+                <p>Agent Teams会自动：</p>
+                <ol>
+                    <li>解析任务，创建共享任务列表</li>
+                    <li>为每个子任务分配负责人</li>
+                    <li>监控进度，处理依赖关系</li>
+                    <li>完成后汇总结果</li>
+                </ol>
+                
+                <div class="info-box">
+                    <strong>🎯 任务分配技巧</strong><br>
+                    每个Agent分配5-6个任务最合适。任务太少会有协调开销，任务太多会失去并行优势。
+                </div>
+            </div>
+            
+            <div class="step">
+                <h4>Step 7：监控和干预</h4>
+                <p>执行过程中，你可以随时干预：</p>
+                
+                <p><strong>进程内模式操作：</strong></p>
+                <ul>
+                    <li><code>Shift+Down</code>：切换到下一个Agent</li>
+                    <li><code>Shift+Up</code>：切换到上一个Agent</li>
+                    <li><code>Ctrl+T</code>：切换任务列表显示</li>
+                    <li><code>Enter</code>：进入当前Agent会话</li>
+                    <li><code>Escape</code>：中断当前Agent</li>
+                </ul>
+                
+                <p><strong>自然语言指令：</strong></p>
+                <pre><code># 暂停某个Agent
+> 暂停Agent #2，我需要检查它的进度
+
+# 向特定Agent发送指令
+> 告诉Agent #1，前端要用React Hooks，不要用类组件
+
+# 查看任务状态
+> 显示所有任务的状态
+
+# 结束任务
+> Agent #3完成了测试，可以关闭它了</code></pre>
+            </div>
+            
+            <h2>五、实际项目体验</h2>
+            <p>我用Agent Teams重构了一个内部工具，原项目约2万行代码。</p>
+            
+            <h3>项目结构</h3>
+            <pre><code>my-project/
+├── frontend/          # React + TypeScript
+├── backend/           # Node.js + Express
+├── shared/            # 公共类型定义
+└── tests/             # 测试文件</code></pre>
+            
+            <h3>Agent分工</h3>
+            <table>
+                <tr>
+                    <th>Agent</th>
+                    <th>职责</th>
+                    <th>输出</th>
+                </tr>
+                <tr>
+                    <td>#1</td>
+                    <td>前端重构</td>
+                    <td>组件拆分、状态管理优化</td>
+                </tr>
+                <tr>
+                    <td>#2</td>
+                    <td>后端重构</td>
+                    <td>API规范化、错误处理完善</td>
+                </tr>
+                <tr>
+                    <td>#3</td>
+                    <td>测试覆盖</td>
+                    <td>单元测试、集成测试</td>
+                </tr>
+            </table>
+            
+            <h3>执行过程</h3>
+            <p><strong>第1轮（30分钟）：</strong></p>
+            <ul>
+                <li>3个Agent同时分析代码，输出各自的重构方案</li>
+                <li>Agent Teams自动检测依赖冲突（比如前后端接口定义不一致）</li>
+            </ul>
+            
+            <p><strong>第2轮（45分钟）：</strong></p>
+            <ul>
+                <li>各Agent按方案执行重构</li>
+                <li>遇到问题时自动回滚或请求人工介入（我设置了3次重试后暂停）</li>
+            </ul>
+            
+            <p><strong>第3轮（20分钟）：</strong></p>
+            <ul>
+                <li>Agent #3运行测试，发现2个回归Bug</li>
+                <li>Agent #1和#2自动修复</li>
+                <li>测试通过</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <strong>总计：约1.5小时</strong><br><br>
+                <strong>对比：之前我一个人搞，预计需要1-2天。</strong>
+            </div>
+            
+            <h3>遇到的问题</h3>
+            <ol>
+                <li><strong>上下文冲突</strong>：多个Agent同时修改共享文件时会冲突。解决方案是提前规划好文件边界。</li>
+                <li><strong>API限流</strong>：3个Agent同时调用API，容易触发限流。我调整了KL-API的并发限制，同时启用了请求队列。</li>
+                <li><strong>沟通成本</strong>：Agent之间的"沟通"其实是通过文件系统和日志，有时候信息传递不够及时。建议设置明确的检查点（checkpoint）。</li>
+            </ol>
+            
+            <h2>六、2026年AI编程趋势思考</h2>
+            <p>用了两周Agent Teams，我对2026年的AI编程有一些思考：</p>
+            
+            <h3>1. 从"单兵作战"到"团队协作"</h3>
+            <p>2025年大家都在讨论"AI会不会取代程序员"，2026年的问题变成了"程序员如何指挥AI团队"。</p>
+            <p>Agent Teams的出现标志着AI编程进入了新阶段：<strong>人类负责架构设计和任务分配，AI负责执行</strong>。</p>
+            
+            <h3>2. 上下文长度成为关键指标</h3>
+            <p>Sonnet 4.6的1M上下文不是噱头。在实际项目中，能把整个代码库扔给AI分析，和只能给AI看几个文件，效率差距是巨大的。</p>
+            <p>可以预见，<strong>2026年各大模型厂商会继续卷上下文长度</strong>。</p>
+            
+            <h3>3. API成本优化成为刚需</h3>
+            <p>Agent Teams虽然好用，但Token消耗是单Agent的3-5倍。如果用官方API，一个复杂任务可能花掉几十美元。</p>
+            <p>这也是为什么我一直在用KL-API做中转。成本优化会成为AI编程工具链的重要一环。</p>
+            
+            <div class="info-box">
+                <strong>💰 Agent Teams成本对比</strong>
+                <table style="margin: 12px 0;">
+                    <tr>
+                        <th>方案</th>
+                        <th>单次任务成本</th>
+                        <th>月度成本（每天2次）</th>
+                    </tr>
+                    <tr>
+                        <td>Anthropic官方API</td>
+                        <td>$15-30</td>
+                        <td>$900-1800</td>
+                    </tr>
+                    <tr>
+                        <td><strong>KL-API中转</strong></td>
+                        <td><strong>$10-20</strong></td>
+                        <td><strong>$600-1200</strong></td>
+                    </tr>
+                </table>
+                <p style="font-size: 0.9rem; margin: 0;">* 基于3个Agent并行、任务时长1小时的估算</p>
+            </div>
+            
+            <h2>七、总结与建议</h2>
+            <p>如果你也想尝试Agent Teams，我的建议是：</p>
+            
+            <ol>
+                <li><strong>先从简单任务开始</strong>：不要一上来就搞大型重构，先试试代码审查或文档生成</li>
+                <li><strong>做好任务拆分</strong>：Agent Teams的效率取决于任务拆分的合理性</li>
+                <li><strong>关注API成本</strong>：建议使用KL-API等中转服务，长期使用能省不少钱</li>
+                <li><strong>保持人工监督</strong>：AI Agent虽然智能，但关键决策还是要人来把关</li>
+            </ol>
+            
+            <p>最后，Agent Teams目前还是实验性功能，有一些限制：</p>
+            <ul>
+                <li>不支持会话恢复（/resume 不会恢复Agent）</li>
+                <li>不支持嵌套（Agent不能创建子Agent）</li>
+                <li>一个会话只能管理一个Team</li>
+            </ul>
+            
+            <p>但瑕不掩瑜，<strong>Agent Teams代表了AI编程的未来方向</strong>。早点上手，早点积累经验，等它正式版发布时你就能领先一步。</p>
+            
+            <hr>
+            
+            <p><strong>相关资源：</strong></p>
+            <ul>
+                <li><a href="https://code.claude.com/docs/en/agent-teams">Claude Code Agent Teams 官方文档</a></li>
+                <li><a href="https://www.anthropic.com/news/claude-4-6">Claude Sonnet 4.6 发布说明</a></li>
+                <li>KL-API：https://kl-api.com（API中转服务）</li>
+            </ul>
+            
+        </article>
+        
+        <footer>
+            <p>本文首发于 CSDN | 作者：燎原火</p>
+            <p style="margin-top: 8px; font-size: 0.85rem;">最后更新：2026年3月12日</p>
+        </footer>
+    </div>
+</body>
+</html>

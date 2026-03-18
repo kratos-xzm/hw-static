@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搞了两周，终于把 Claude Sonnet 4.6 驯服了 - CSDN技术文章</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .header .subtitle {
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        h2 {
+            color: #1a1a2e;
+            font-size: 22px;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h3 {
+            color: #333;
+            font-size: 18px;
+            margin: 25px 0 12px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        blockquote {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin: 20px 0;
+            color: #555;
+            font-style: italic;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            color: #d63384;
+        }
+        
+        pre {
+            background: #1a1a2e;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 30px 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .header, .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 搞了两周，终于把 Claude Sonnet 4.6 驯服了</h1>
+            <p class="subtitle">顺便解决了一个烦人的 API 访问问题</p>
+        </div>
+        
+        <div class="content">
+            <blockquote>
+                这篇文章适合：想用 Claude 但苦于网络问题的开发者，以及想了解 Sonnet 4.6 到底有多强的技术人。
+            </blockquote>
+            
+            <h2>一、开篇：被上下文限制折磨的日子</h2>
+            
+            <p>说实话，我折腾 Claude 不是一天两天了。</p>
+            
+            <p>作为一个经常要处理大型代码库的程序员，我之前用 Claude 3.5 Sonnet 的时候，最大的痛苦就是<strong>上下文不够用</strong>。200K token 听起来很多，但面对那种动辄几十万行的 legacy 项目，聊几句就得让它"重新读代码"，效率直接打五折。</p>
+            
+            <p>更别提在国内访问 Claude API 的折腾——梯子不稳定、IP 被封、账单地址验证......每次想好好写个代码，光配置环境就要搞半天。</p>
+            
+            <p>直到 Claude Sonnet 4.6 发布，我看到官方说支持 <strong>1M token 上下文窗口</strong>，我直接坐不住了。</p>
+            
+            <p>但问题来了：怎么在国内稳定用上它？</p>
+            
+            <h2>二、Claude Sonnet 4.6 到底有什么厉害的？</h2>
+            
+            <p>先简单介绍一下，为什么这次升级值得折腾。</p>
+            
+            <h3>1. 百万级上下文窗口（Beta）</h3>
+            
+            <p>这是最大的卖点。100 万 token 什么概念？</p>
+            
+            <ul>
+                <li>大约可以一次性放入 <strong>3000 行代码</strong> + <strong>完整的项目文档</strong></li>
+                <li>可以直接把整个代码库丢给 Claude 分析</li>
+                <li>不用再频繁地说"请参考我之前的代码"</li>
+            </ul>
+            
+            <p>我自己实测，把一个中型 React 项目的 src 目录全部贴进去，Claude 居然能一次性理解项目的架构关系，还能指出不同组件之间的潜在耦合问题。这在以前是不可想象的。</p>
+            
+            <h3>2. 编码能力大幅跃升</h3>
+            
+            <p>官方说 Sonnet 4.6 的编码能力"超过了 Claude 3 Opus"，我一开始是怀疑的。但用了两周后，我信了。</p>
+            
+            <p>几个让我惊艳的场景：</p>
+            
+            <ul>
+                <li><strong>重构复杂函数</strong>：我给它一个 200 行的嵌套回调地狱，它不到 10 秒就给出了 Promise + async/await 的优雅重构方案</li>
+                <li><strong>跨文件理解</strong>：我把 utils、hooks、components 三个目录的内容一起发过去，它能准确指出某个 utils 函数在哪些组件里被调用了</li>
+                <li><strong>Bug 定位</strong>：一个困扰我两天的内存泄漏问题，它通过分析代码执行流程，直接指出了事件监听器没移除的根本原因</li>
+            </ul>
+            
+            <h3>3. 计算机使用能力增强</h3>
+            
+            <p>这个功能对我来说是意外之喜。Sonnet 4.6 能更好地理解和操作结构化数据，比如：</p>
+            
+            <ul>
+                <li>解析复杂的 JSON/YAML 配置文件</li>
+                <li>在多个表格之间进行数据关联分析</li>
+                <li>理解并操作网页 DOM 结构</li>
+            </ul>
+            
+            <p>我做了一个实验：让它帮我分析一个 50MB 的 Nginx 日志文件。我直接把日志内容贴进去（压缩后），它不仅能统计出最常见的状态码，还能根据 User-Agent 分析出哪些是爬虫请求。</p>
+            
+            <h2>三、国内使用 Claude 的痛点</h2>
+            
+            <p>说回正题。Sonnet 4.6 再好，在国内用 Claude API 依然是件麻烦事。</p>
+            
+            <h3>常见问题：</h3>
+            
+            <ol>
+                <li><strong>网络不稳定</strong>：梯子一旦抽风，API 调用直接超时</li>
+                <li><strong>IP 风控</strong>：Anthropic 对国内 IP 不太友好，经常触发安全验证</li>
+                <li><strong>支付困难</strong>：没有国外信用卡，根本开不了 API 账号</li>
+                <li><strong>响应速度慢</strong>：走代理绕一大圈，每次请求多等好几秒</li>
+            </ol>
+            
+            <p>我之前试过各种方案：</p>
+            
+            <ul>
+                <li>自建代理服务器？维护成本高，而且 IP 池要不停更新</li>
+                <li>用第三方 Claude 客户端？功能受限，而且很多不支持最新的模型</li>
+                <li>买共享账号？安全性没保障，随时可能被封</li>
+            </ul>
+            
+            <p>直到我发现了 <strong>KL-API</strong>，这个问题才算彻底解决。</p>
+            
+            <h2>四、KL-API：国内使用 Claude API 的最佳中转方案</h2>
+            
+            <h3>什么是 KL-API？</h3>
+            
+            <p>KL-API 是一个 API 中转服务平台，简单说就是：</p>
+            
+            <div class="highlight-box">
+                <strong>你 → KL-API → Anthropic 官方 API</strong>
+            </div>
+            
+            <p>它在国内部署了节点，你只需要访问国内的服务器，剩下的路由和认证它帮你搞定。</p>
+            
+            <h3>为什么选它？</h3>
+            
+            <p>我用了两周，总结几个亮点：</p>
+            
+            <table>
+                <tr>
+                    <th>特性</th>
+                    <th>体验</th>
+                </tr>
+                <tr>
+                    <td><span class="badge">核心</span> 无需梯子</td>
+                    <td>国内直接访问，延迟低</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">新</span> 支持最新模型</td>
+                    <td>Sonnet 4.6、Opus 4.6 都支持</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">省</span> 按量计费</td>
+                    <td>用多少付多少，没有月租</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">易</span> 兼容 OpenAI 格式</td>
+                    <td>代码里改个 baseURL 就能用</td>
+                </tr>
+                <tr>
+                    <td><span class="badge">稳</span> 稳定可靠</td>
+                    <td>两周用下来，没有一次超时或失败</td>
+                </tr>
+            </table>
+            
+            <h3>配置教程</h3>
+            
+            <p>以 Claude Code CLI 工具为例，看看怎么接入 KL-API。</p>
+            
+            <h4>第一步：获取 KL-API 密钥</h4>
+            
+            <ol>
+                <li>访问 KL-API 官网注册账号</li>
+                <li>在控制台创建一个新的 API Key</li>
+                <li>充值（支持支付宝/微信，最低 10 元起充）</li>
+            </ol>
+            
+            <h4>第二步：配置 Claude Code</h4>
+            
+            <p>Claude Code 默认用的是 Anthropic 官方 API，我们需要让它走 KL-API 的中转地址。</p>
+            
+            <pre><code># 设置环境变量
+export ANTHROPIC_API_KEY="your-kl-api-key"
+export ANTHROPIC_BASE_URL="https://api.kl-api.io/v1"
+
+# 启动 Claude Code
+claude</code></pre>
+            
+            <p>如果你想让配置持久化，可以把上面的 export 语句加到你的 <code>.bashrc</code> 或 <code>.zshrc</code> 里。</p>
+            
+            <h4>第三步：验证是否成功</h4>
+            
+            <p>启动后，输入：</p>
+            
+            <pre><code>/model</code></pre>
+            
+            <p>你应该能看到 Sonnet 4.6 的选项。选择它，然后随便问个问题测试一下。</p>
+            
+            <pre><code>你好，请问你是什么模型？</code></pre>
+            
+            <p>如果 Claude 回复说它是 Claude 3.5 Sonnet 或者版本号包含 "4.6"，那就说明配置成功了。</p>
+            
+            <h2>五、代码示例：用 Python 调用 Sonnet 4.6</h2>
+            
+            <p>如果你更喜欢自己写代码调用 API，这里有一个完整的示例。</p>
+            
+            <h3>安装依赖</h3>
+            
+            <pre><code>pip install anthropic</code></pre>
+            
+            <h3>调用代码</h3>
+            
+            <pre><code>import anthropic
+
+# 使用 KL-API 的中转地址
+client = anthropic.Anthropic(
+    api_key="your-kl-api-key",
+    base_url="https://api.kl-api.io/v1"
+)
+
+# 发送请求
+response = client.messages.create(
+    model="claude-sonnet-4-6-20260217",
+    max_tokens=4096,
+    messages=[
+        {
+            "role": "user",
+            "content": "请用 Python 写一个快速排序，并解释时间复杂度"
+        }
+    ]
+)
+
+print(response.content[0].text)</code></pre>
+            
+            <h3>处理长上下文</h3>
+            
+            <p>Sonnet 4.6 最大的卖点是支持 1M token，我们来看看怎么利用这个特性。</p>
+            
+            <p>假设你有一个大项目的代码，想让它帮你分析：</p>
+            
+            <pre><code>import os
+import anthropic
+
+client = anthropic.Anthropic(
+    api_key="your-kl-api-key",
+    base_url="https://api.kl-api.io/v1"
+)
+
+# 读取整个项目代码
+def read_project_code(directory, extensions=('.py', '.js', '.ts', '.jsx', '.tsx')):
+    code_contents = []
+    for root, dirs, files in os.walk(directory):
+        # 跳过 node_modules 等目录
+        dirs[:] = [d for d in dirs if d not in ['node_modules', '.git', '__pycache__']]
+        
+        for file in files:
+            if file.endswith(extensions):
+                filepath = os.path.join(root, file)
+                try:
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                        code_contents.append(f"=== {filepath} ===\n{content}\n")
+                except:
+                    continue
+    
+    return "\n".join(code_contents)
+
+# 读取代码
+project_code = read_project_code("./my-project")
+
+# 发送给 Claude 分析
+response = client.messages.create(
+    model="claude-sonnet-4-6-20260217",
+    max_tokens=8192,
+    messages=[
+        {
+            "role": "user",
+            "content": f"请分析以下代码库的结构和潜在问题：\n\n{project_code[:500000]}"
+        }
+    ]
+)
+
+print(response.content[0].text)</code></pre>
+            
+            <p>这个例子展示了如何利用 Sonnet 4.6 的长上下文能力。以前可能需要分批发送的代码，现在可以一次性扔给 Claude 分析。</p>
+            
+            <h2>六、使用心得和建议</h2>
+            
+            <h3>适合的场景</h3>
+            
+            <p>经过两周的实测，我觉得 Sonnet 4.6 + KL-API 特别适合：</p>
+            
+            <ol>
+                <li><strong>大型代码库分析</strong>：一次性理解项目整体架构</li>
+                <li><strong>复杂 Bug 排查</strong>：把相关代码、日志、错误堆栈全部贴进去</li>
+                <li><strong>代码重构</strong>：跨多个文件的重命名、提取公共函数等</li>
+                <li><strong>技术文档撰写</strong>：基于大量代码生成 API 文档或 README</li>
+            </ol>
+            
+            <h3>注意事项</h3>
+            
+            <ol>
+                <li><strong>1M 上下文是 Beta 功能</strong>：目前还在测试阶段，偶尔会有不稳定的情况</li>
+                <li><strong>长上下文费用更高</strong>：Token 多了，费用自然也会增加，建议合理控制输入长度</li>
+                <li><strong>不要过度依赖</strong>：AI 是辅助工具，关键决策还是要自己把关</li>
+            </ol>
+            
+            <h3>成本控制小技巧</h3>
+            
+            <ul>
+                <li>先用短上下文问清楚需求，再开长上下文做详细分析</li>
+                <li>对于简单的代码补全，用 Sonnet 4.5 也够用</li>
+                <li>KL-API 支持设置每日/每月消费上限，防止意外超支</li>
+            </ul>
+            
+            <h2>七、写在最后</h2>
+            
+            <p>说实话，AI 编程工具发展得太快了。去年我还在用 Copilot 写简单的代码补全，今年已经可以让 Claude 帮我分析整个项目了。</p>
+            
+            <p>Claude Sonnet 4.6 的 1M 上下文能力，对于处理大型项目来说是一个质变。再加上 KL-API 这样的中转服务，国内开发者也能无障碍地用上最前沿的 AI 能力。</p>
+            
+            <p>如果你也在国内，想用 Claude 但苦于网络问题，不妨试试 KL-API。至少我用下来，体验是真的很丝滑。</p>
+            
+            <div class="highlight-box">
+                <strong>🎁 福利</strong>：KL-API 新用户注册即送体验额度，可以先试用再决定是否长期使用。
+            </div>
+            
+            <hr>
+            
+            <p><strong>你的 Claude 体验如何？欢迎在评论区交流使用心得 👇</strong></p>
+            
+            <p><em>如果这篇文章对你有帮助，麻烦点个赞让更多人看到～</em></p>
+        </div>
+        
+        <div class="footer">
+            <p>📅 发布于 2026年3月12日 | 🏷️ 标签：Claude, AI编程, API中转</p>
+            <p style="margin-top: 10px;">
+                🔗 <a href="https://github.com/kratos-xzm/hw-static" target="_blank">查看 GitHub 源码</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
