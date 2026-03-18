@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>折腾了 3 小时，终于把 OpenClaw 2026.3.7 跑通了（附 GPT-5.4 接入方案）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        h2 {
+            font-size: 22px;
+            color: #2c2c2c;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        h3 {
+            font-size: 18px;
+            color: #3c3c3c;
+            margin: 25px 0 12px;
+        }
+        
+        h4 {
+            font-size: 16px;
+            color: #4c4c4c;
+            margin: 20px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 0.9em;
+            color: #c7254e;
+        }
+        
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        blockquote {
+            border-left: 4px solid #2196F3;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #555;
+            font-style: italic;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 25px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 30px 0;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="meta">
+            <span class="tag">OpenClaw</span>
+            <span class="tag">AI工具</span>
+            <span class="tag">技术教程</span>
+            <span class="tag">KL-API</span>
+        </div>
+        
+        <h1>折腾了 3 小时，终于把 OpenClaw 2026.3.7 跑通了（附 GPT-5.4 接入方案）</h1>
+        
+        <p>说实话，我一开始是拒绝升级 OpenClaw 的。</p>
+        
+        <p>上周看到 2026.3.7 版本发布的消息，说什么"89 项提交、200+ Bug 修复"，还新增了 GPT-5.4 和 Gemini 3.1 Flash-Lite 的支持。我心想：不就是一次常规更新吗？</p>
+        
+        <p>结果昨天手贱点了升级，直接崩了。</p>
+        
+        <p>搞了整整 3 个小时，踩了无数个坑，终于把这玩意儿跑通了。今天把完整过程记录下来，希望能帮到你。</p>
+        
+        <hr>
+        
+        <h2>为什么要升级？这次更新真的香</h2>
+        
+        <p>先说结论：<strong>这次更新值得升</strong>。</p>
+        
+        <p>OpenClaw 2026.3.7 不是那种"修修 Bug、改改文案"的敷衍更新。官方说是"史上最密集的一次更新"，还真没夸张。</p>
+        
+        <p><strong>核心亮点我帮你整理了一下：</strong></p>
+        
+        <ol>
+            <li><strong>模型支持大升级</strong> - 新增 GPT-5.4、Gemini 3.1 Flash-Lite，上下文直接干到 100 万 token</li>
+            <li><strong>记忆系统重构</strong> - ContextEngine 插件接口开放，AI 记忆可以"自由插拔"了</li>
+            <li><strong>生命周期钩子</strong> - bootstrap、ingest、assemble、compact...开发者终于可以深度定制了</li>
+            <li><strong>ACP 持久化</strong> - 以前重启后频道绑定会丢，现在自动恢复</li>
+        </ol>
+        
+        <p>最吸引我的是第一条。GPT-5.4 的原生电脑操作能力在 OSWorld Verified 基准上从 47.3% 飙到了 75%，这意味着什么？意味着 AI 真的可以自己用电脑了。</p>
+        
+        <p>但问题来了：国内怎么接入 GPT-5.4？</p>
+        
+        <h2>踩坑实录：升级过程中的 3 个大坑</h2>
+        
+        <p>在正式说配置之前，先说说我都踩了哪些坑。这些坑你要是提前知道，能省至少 1 个小时。</p>
+        
+        <h3>坑 1：模型配置格式变了</h3>
+        
+        <p>旧版本的模型配置是这样的：</p>
+        
+        <pre><code>{
+  "model": "gpt-4",
+  "api_key": "sk-xxx"
+}</code></pre>
+        
+        <p>2026.3.7 版本改成了嵌套结构：</p>
+        
+        <pre><code>{
+  "models": {
+    "default": {
+      "provider": "openai",
+      "model": "gpt-5.4",
+      "api_key": "sk-xxx",
+      "base_url": "https://api.openai.com/v1"
+    }
+  }
+}</code></pre>
+        
+        <p>如果你不改格式，启动直接报错。报错信息还特别迷惑，说什么"provider not found"，我一度以为是网络问题。</p>
+        
+        <h3>坑 2：Docker 构建失败了 5 次</h3>
+        
+        <p>新版精简了 Docker 多阶段构建，听起来是好事，但实际上...</p>
+        
+        <p>如果你之前用过旧版 Docker 镜像，直接 <code>docker pull</code> 更新可能会遇到层缓存问题。我的解决方案是：</p>
+        
+        <pre><code># 彻底清理旧镜像
+docker rmi $(docker images -q "*openclaw*") -f
+docker builder prune -f
+
+# 重新构建
+docker build --no-cache -t openclaw:2026.3.7 .</code></pre>
+        
+        <h3>坑 3：GPT-5.4 国内无法直接访问</h3>
+        
+        <p>这是最大的问题。</p>
+        
+        <p>GPT-5.4 目前只通过 OpenAI 官方 API 提供，国内直接访问会被...你懂的。即使你有 API Key，请求也会超时或直接被拒绝。</p>
+        
+        <p>我试了几种方案：</p>
+        <ul>
+            <li>自己搭代理？太麻烦，还要维护</li>
+            <li>用第三方转发服务？怕不稳定，也担心安全问题</li>
+            <li>换 Claude？但是 GPT-5.4 的电脑操作能力真的香啊</li>
+        </ul>
+        
+        <p>最后我用了一个叫 <strong>KL-API</strong> 的中转方案，算是目前最省心的选择了。</p>
+        
+        <h2>实战配置：接入 GPT-5.4 的完整步骤</h2>
+        
+        <p>好了，下面是实操环节。</p>
+        
+        <p>我假设你已经安装好了 OpenClaw 2026.3.7，如果还没安装，可以参考官方文档或者阿里云的部署教程（链接我放文末）。</p>
+        
+        <h3>步骤 1：获取 KL-API 中转服务</h3>
+        
+        <p>KL-API 是一个 API 中转平台，支持 OpenAI、Claude、Gemini 等主流模型。关键是国内可以直接访问，响应速度也不错。</p>
+        
+        <p>去他们官网注册个账号（链接：https://kl-api.top），然后创建一个新的 API Key。你会拿到类似这样的 Key：</p>
+        
+        <pre><code>kl-xxxxxxxxxxxxxxxxxxxxxxxx</code></pre>
+        
+        <h3>步骤 2：修改 OpenClaw 配置</h3>
+        
+        <p>打开你的 OpenClaw 配置文件，通常是 <code>~/.openclaw/config.json</code>。</p>
+        
+        <p>找到 <code>models</code> 部分，改成这样：</p>
+        
+        <pre><code>{
+  "models": {
+    "default": {
+      "provider": "openai",
+      "model": "gpt-5.4",
+      "api_key": "kl-你的APIKey",
+      "base_url": "https://api.kl-api.top/v1"
+    },
+    "fast": {
+      "provider": "openai", 
+      "model": "gpt-5.3-codex",
+      "api_key": "kl-你的APIKey",
+      "base_url": "https://api.kl-api.top/v1"
+    }
+  }
+}</code></pre>
+        
+        <p><strong>划重点：</strong></p>
+        <ul>
+            <li><code>base_url</code> 一定要改成 KL-API 的地址</li>
+            <li><code>api_key</code> 用 KL-API 给你的 Key，不是 OpenAI 的</li>
+            <li><code>model</code> 名称和官方保持一致，<code>gpt-5.4</code> 或者 <code>gpt-5.3-codex</code></li>
+        </ul>
+        
+        <h3>步骤 3：测试连接</h3>
+        
+        <p>保存配置后，重启 OpenClaw：</p>
+        
+        <pre><code>openclaw restart</code></pre>
+        
+        <p>然后测试一下模型是否正常工作：</p>
+        
+        <pre><code>openclaw chat --model gpt-5.4</code></pre>
+        
+        <p>如果看到正常的交互界面，说明配置成功。</p>
+        
+        <p>我测试了一下 GPT-5.4 的代码能力，说实话，真的强。我写了一个需求让它帮我重构一个 Python 项目，它不仅给出了代码，还分析了每个改动的理由，甚至发现了两个潜在的 Bug。</p>
+        
+        <h3>步骤 4：配置 Gemini 3.1 Flash-Lite（可选）</h3>
+        
+        <p>如果你想同时用 Gemini 3.1 Flash-Lite（速度快、价格便宜），可以再加一个配置：</p>
+        
+        <pre><code>{
+  "models": {
+    "gemini": {
+      "provider": "google",
+      "model": "gemini-3.1-flash-lite",
+      "api_key": "kl-你的APIKey",
+      "base_url": "https://api.kl-api.top/v1"
+    }
+  }
+}</code></pre>
+        
+        <p>KL-API 的好处是同一个 Key 可以访问多个模型，不用每个平台都注册一遍。</p>
+        
+        <h2>一些使用建议</h2>
+        
+        <p>折腾完这 3 小时，我总结了几条经验：</p>
+        
+        <p><strong>1. GPT-5.4 适合什么场景？</strong></p>
+        <ul>
+            <li>复杂代码重构和分析</li>
+            <li>需要多步骤推理的任务</li>
+            <li>电脑操作自动化（如果你有相关需求）</li>
+        </ul>
+        
+        <p><strong>2. GPT-5.3-Codex 更适合什么场景？</strong></p>
+        <ul>
+            <li>日常编程辅助</li>
+            <li>快速生成代码片段</li>
+            <li>性价比更高</li>
+        </ul>
+        
+        <p><strong>3. 关于 KL-API</strong></p>
+        <ul>
+            <li>稳定性还不错，用了几天没遇到超时</li>
+            <li>计费比官方便宜一些（大概是官方的 7-8 折？）</li>
+            <li>支持模型挺全的，OpenAI、Claude、Gemini 都有</li>
+        </ul>
+        
+        <h2>写在最后</h2>
+        
+        <p>说实话，折腾 OpenClaw 的过程挺痛苦的。但配置好 GPT-5.4 之后，真香。</p>
+        
+        <p>我现在日常开发基本离不开它了。写代码、查文档、分析日志，效率提升至少 30%。</p>
+        
+        <p>如果你也在用 OpenClaw，强烈建议升级到 2026.3.7。如果遇到 GPT-5.4 接入的问题，可以试试 KL-API 这个方案，至少比我一开始自己搭代理省心多了。</p>
+        
+        <p>有什么问题欢迎评论区交流。如果文章对你有帮助，点个赞呗。</p>
+        
+        <hr>
+        
+        <p><strong>参考链接：</strong></p>
+        <ul>
+            <li>OpenClaw 官方文档：https://docs.openclaw.io</li>
+            <li>OpenClaw 2026.3.7 更新日志：https://github.com/openclaw/openclaw/releases</li>
+            <li>KL-API 官网：https://kl-api.top</li>
+            <li>阿里云部署教程（国内镜像加速）：https://developer.aliyun.com/article/1715527</li>
+            <li>NVIDIA NemoClaw 介绍：https://blogs.nvidia.cn/blog/nvidia-announces-nemoclaw/</li>
+        </ul>
+        
+        <p style="color: #999; font-size: 14px; margin-top: 30px;">Published on 2026-03-18</p>
+    </div>
+</body>
+</html>
