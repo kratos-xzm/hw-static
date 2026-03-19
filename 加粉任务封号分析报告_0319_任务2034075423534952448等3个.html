@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook 机器人风控分析报告</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 28px; margin-bottom: 10px; }
+        .header .meta { opacity: 0.9; font-size: 14px; }
+        .section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .section h2 {
+            font-size: 20px;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .kpi-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        .kpi-card .label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        .kpi-card .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        .kpi-card .unit {
+            font-size: 14px;
+            color: #a0aec0;
+            margin-left: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td { color: #2d3748; }
+        tr:hover { background: #f7fafc; }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-success { background: #c6f6d5; color: #22543d; }
+        .badge-warning { background: #feebc8; color: #7c2d12; }
+        .badge-danger { background: #fed7d7; color: #742a2a; }
+        .footer {
+            text-align: center;
+            color: #a0aec0;
+            font-size: 12px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Facebook 机器人风控分析报告</h1>
+            <div class="meta">
+                生成时间: 2026-03-19 17:03:41<br>
+                分析任务: 2034075423534952448, 2034293793290915840, 2034298707794526208
+                
+            </div>
+        </div>
+
+        
+        <div class="section">
+            <h2>🚫 封号模式分析</h2>
+
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="label">总机器人数</div>
+                    <div class="value">5343</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">被封号数</div>
+                    <div class="value">1476</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">封号率</div>
+                    <div class="value">27.62<span class="unit">%</span></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">封号前平均操作次数</div>
+                    <div class="value">6.5</div>
+                </div>
+            </div>
+
+            
+            <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; color: #4a5568;">分任务封号率</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>任务名称</th>
+                        <th>总机器人数</th>
+                        <th>被封号数</th>
+                        <th>封号率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>318日本交友</td>
+                        <td>4107</td>
+                        <td>942</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">22.94%</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>0319日本交友_新号1</td>
+                        <td>1276</td>
+                        <td>310</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">24.29%</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>0319日本交友_老号</td>
+                        <td>3255</td>
+                        <td>224</td>
+                        <td>
+                            
+                            <span class="badge badge-warning">6.88%</span>
+                            
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+
+            
+            <h3 style="margin-top: 30px; margin-bottom: 15px; font-size: 16px; color: #4a5568;">新老账号对比</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>账号年龄</th>
+                        <th>总数</th>
+                        <th>被封数</th>
+                        <th>封号率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>新号 (&lt;7天)</td>
+                        <td>1107</td>
+                        <td>35</td>
+                        <td><span class="badge badge-success">3.16%</span></td>
+                    </tr>
+                    
+                    
+                    <tr>
+                        <td>普通号 (7-30天)</td>
+                        <td>7074</td>
+                        <td>1368</td>
+                        <td><span class="badge badge-warning">19.34%</span></td>
+                    </tr>
+                    
+                    
+                    <tr>
+                        <td>老号 (&gt;30天)</td>
+                        <td>457</td>
+                        <td>73</td>
+                        <td><span class="badge badge-danger">15.97%</span></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+        </div>
+        
+
+        
+        <div class="section">
+            <h2>👤 账号画像分析</h2>
+
+            <!-- 账号类型封号率 -->
+            <h3 style="margin-bottom:12px;font-size:16px;color:#4a5568;">按账号类型（整体）</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>账号类型</th>
+                        <th>总数</th>
+                        <th>正常</th>
+                        <th>需重登</th>
+                        <th>封号</th>
+                        <th>封号率</th>
+                        <th>重登率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td><strong>Phone</strong></td>
+                        <td>1863</td>
+                        <td>1571</td>
+                        <td>368</td>
+                        <td>753</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">40.4%</span>
+                            
+                        </td>
+                        <td>19.8%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>iCloud</strong></td>
+                        <td>3478</td>
+                        <td>4698</td>
+                        <td>519</td>
+                        <td>725</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">20.8%</span>
+                            
+                        </td>
+                        <td>14.9%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>iCloud</strong></td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>
+                            
+                            <span class="badge badge-success">0.0%</span>
+                            
+                        </td>
+                        <td>100.0%</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+
+            <!-- 账号注册时长封号率 -->
+            <h3 style="margin-top:28px;margin-bottom:12px;font-size:16px;color:#4a5568;">按账号注册时长（整体）</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>注册时长</th>
+                        <th>总数</th>
+                        <th>正常</th>
+                        <th>需重登</th>
+                        <th>封号</th>
+                        <th>封号率</th>
+                        <th>重登率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td><strong>0-7d</strong></td>
+                        <td>2804</td>
+                        <td>3841</td>
+                        <td>104</td>
+                        <td>589</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">21.0%</span>
+                            
+                        </td>
+                        <td>3.7%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>7-30d</strong></td>
+                        <td>2510</td>
+                        <td>2415</td>
+                        <td>778</td>
+                        <td>878</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">35.0%</span>
+                            
+                        </td>
+                        <td>31.0%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>30-90d</strong></td>
+                        <td>29</td>
+                        <td>15</td>
+                        <td>7</td>
+                        <td>11</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">37.9%</span>
+                            
+                        </td>
+                        <td>24.1%</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+
+            <!-- 分任务 × 账号类型 -->
+            
+            <h3 style="margin-top:28px;margin-bottom:12px;font-size:16px;color:#4a5568;">分任务 × 账号类型</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>任务</th>
+                        <th>账号类型</th>
+                        <th>总数</th>
+                        <th>封号</th>
+                        <th>封号率</th>
+                        <th>重登率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">318日本交友</td>
+                        <td><strong>iCloud</strong></td>
+                        <td>2867</td>
+                        <td>486</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">17.0%</span>
+                            
+                        </td>
+                        <td>9.0%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">318日本交友</td>
+                        <td><strong>Phone</strong></td>
+                        <td>1238</td>
+                        <td>457</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">36.9%</span>
+                            
+                        </td>
+                        <td>14.0%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">318日本交友</td>
+                        <td><strong>iCloud</strong></td>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>
+                            
+                            <span class="badge badge-success">0.0%</span>
+                            
+                        </td>
+                        <td>50.0%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_老号</td>
+                        <td><strong>Gmail</strong></td>
+                        <td>2451</td>
+                        <td>136</td>
+                        <td>
+                            
+                            <span class="badge badge-warning">5.5%</span>
+                            
+                        </td>
+                        <td>8.1%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_老号</td>
+                        <td><strong>Phone</strong></td>
+                        <td>802</td>
+                        <td>89</td>
+                        <td>
+                            
+                            <span class="badge badge-warning">11.1%</span>
+                            
+                        </td>
+                        <td>14.7%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_老号</td>
+                        <td><strong>iCloud</strong></td>
+                        <td>2</td>
+                        <td>0</td>
+                        <td>
+                            
+                            <span class="badge badge-success">0.0%</span>
+                            
+                        </td>
+                        <td>50.0%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_新号1</td>
+                        <td><strong>Phone</strong></td>
+                        <td>652</td>
+                        <td>207</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">31.7%</span>
+                            
+                        </td>
+                        <td>11.8%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_新号1</td>
+                        <td><strong>Gmail</strong></td>
+                        <td>624</td>
+                        <td>103</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">16.5%</span>
+                            
+                        </td>
+                        <td>9.9%</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+
+            <!-- 分任务 × 注册时长 -->
+            
+            <h3 style="margin-top:28px;margin-bottom:12px;font-size:16px;color:#4a5568;">分任务 × 注册时长</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>任务</th>
+                        <th>注册时长</th>
+                        <th>总数</th>
+                        <th>封号</th>
+                        <th>封号率</th>
+                        <th>重登率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">318日本交友</td>
+                        <td><strong>0-7d</strong></td>
+                        <td>1822</td>
+                        <td>219</td>
+                        <td>
+                            
+                            <span class="badge badge-warning">12.0%</span>
+                            
+                        </td>
+                        <td>0.0%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">318日本交友</td>
+                        <td><strong>7-30d</strong></td>
+                        <td>2281</td>
+                        <td>723</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">31.7%</span>
+                            
+                        </td>
+                        <td>18.9%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">318日本交友</td>
+                        <td><strong>30-90d</strong></td>
+                        <td>4</td>
+                        <td>1</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">25.0%</span>
+                            
+                        </td>
+                        <td>25.0%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_老号</td>
+                        <td><strong>0-7d</strong></td>
+                        <td>1727</td>
+                        <td>127</td>
+                        <td>
+                            
+                            <span class="badge badge-warning">7.4%</span>
+                            
+                        </td>
+                        <td>0.0%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_老号</td>
+                        <td><strong>7-30d</strong></td>
+                        <td>1524</td>
+                        <td>97</td>
+                        <td>
+                            
+                            <span class="badge badge-warning">6.4%</span>
+                            
+                        </td>
+                        <td>20.8%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_老号</td>
+                        <td><strong>30-90d</strong></td>
+                        <td>4</td>
+                        <td>1</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">25.0%</span>
+                            
+                        </td>
+                        <td>25.0%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_新号1</td>
+                        <td><strong>0-7d</strong></td>
+                        <td>985</td>
+                        <td>243</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">24.7%</span>
+                            
+                        </td>
+                        <td>10.6%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_新号1</td>
+                        <td><strong>7-30d</strong></td>
+                        <td>266</td>
+                        <td>58</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">21.8%</span>
+                            
+                        </td>
+                        <td>11.3%</td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="font-size:12px;color:#718096;">0319日本交友_新号1</td>
+                        <td><strong>30-90d</strong></td>
+                        <td>25</td>
+                        <td>9</td>
+                        <td>
+                            
+                            <span class="badge badge-danger">36.0%</span>
+                            
+                        </td>
+                        <td>20.0%</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            
+        </div>
+        
+
+        <div class="footer">
+            <p>FB Risk Analyzer | Generated by Claude</p>
+        </div>
+    </div>
+</body>
+</html>
