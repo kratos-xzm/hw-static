@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FB加粉任务封号分析报告 - 2026-03-18</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; line-height: 1.6; }
+.header { background: linear-gradient(135deg, #1a1f2e 0%, #16213e 100%); padding: 32px 40px; border-bottom: 1px solid #2d3748; }
+.header h1 { font-size: 24px; font-weight: 700; color: #fff; }
+.header .subtitle { color: #718096; margin-top: 4px; font-size: 14px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 32px 40px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.kpi-card { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 12px; padding: 20px; }
+.kpi-card .label { font-size: 12px; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; }
+.kpi-card .value { font-size: 32px; font-weight: 700; margin-top: 8px; }
+.kpi-card .sub { font-size: 12px; color: #718096; margin-top: 4px; }
+.kpi-card.danger .value { color: #fc8181; }
+.kpi-card.warning .value { color: #f6ad55; }
+.kpi-card.success .value { color: #68d391; }
+.kpi-card.info .value { color: #63b3ed; }
+.section { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+.section h2 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #2d3748; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; color: #718096; font-weight: 500; border-bottom: 1px solid #2d3748; }
+td { padding: 10px 12px; border-bottom: 1px solid #1e2535; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #1e2535; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.badge-danger { background: rgba(252,129,129,0.15); color: #fc8181; }
+.badge-warning { background: rgba(246,173,85,0.15); color: #f6ad55; }
+.badge-success { background: rgba(104,211,145,0.15); color: #68d391; }
+.badge-info { background: rgba(99,179,237,0.15); color: #63b3ed; }
+.progress-bar { height: 6px; background: #2d3748; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.progress-fill { height: 100%; border-radius: 3px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.alert-box { background: rgba(252,129,129,0.08); border: 1px solid rgba(252,129,129,0.3); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.alert-box h3 { color: #fc8181; font-size: 14px; margin-bottom: 8px; }
+.alert-box ul { list-style: none; }
+.alert-box ul li { color: #e2e8f0; font-size: 13px; padding: 3px 0; padding-left: 16px; position: relative; }
+.alert-box ul li::before { content: '->'; position: absolute; left: 0; color: #fc8181; }
+.rec-box { background: rgba(104,211,145,0.08); border: 1px solid rgba(104,211,145,0.3); border-radius: 8px; padding: 16px; }
+.rec-box h3 { color: #68d391; font-size: 14px; margin-bottom: 8px; }
+.rec-box ul { list-style: none; }
+.rec-box ul li { color: #e2e8f0; font-size: 13px; padding: 3px 0; padding-left: 16px; position: relative; }
+.rec-box ul li::before { content: 'v'; position: absolute; left: 0; color: #68d391; }
+.insight-box { background: rgba(99,179,237,0.08); border: 1px solid rgba(99,179,237,0.3); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.insight-box h3 { color: #63b3ed; font-size: 14px; margin-bottom: 8px; }
+.insight-box p { color: #e2e8f0; font-size: 13px; line-height: 1.7; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>FB加粉任务封号分析报告</h1>
+  <div class="subtitle">分析时间: 2026-03-18 | 全量任务分析 | 共35个任务 / 15,918台机器人 | status: 1=正常 / 2=需重登 / 3=封号</div>
+</div>
+<div class="container">
+
+<!-- KPI -->
+<div class="kpi-grid">
+  <div class="kpi-card danger">
+    <div class="label">整体封号率</div>
+    <div class="value">43.2%</div>
+    <div class="sub">6,880 / 15,918 台封号</div>
+  </div>
+  <div class="kpi-card warning">
+    <div class="label">需重登</div>
+    <div class="value">828</div>
+    <div class="sub">占比 5.2%</div>
+  </div>
+  <div class="kpi-card success">
+    <div class="label">正常运行</div>
+    <div class="value">8,210</div>
+    <div class="sub">占比 51.6%</div>
+  </div>
+  <div class="kpi-card info">
+    <div class="label">加粉操作成功率</div>
+    <div class="value">65.6%</div>
+    <div class="sub">91,562 / 139,537 次成功</div>
+  </div>
+</div>
+
+<!-- 风险洞察 -->
+<div class="section">
+  <h2>风险洞察</h2>
+  <div class="alert-box">
+    <h3>高危信号</h3>
+    <ul>
+      <li>3个任务封号率超过60%（最高84.1%），属于极高风险，疑似账号批次质量问题或IP集中触发风控</li>
+      <li>Phone类型账号封号率55.8%，显著高于Gmail(40.0%)，手机号注册账号抗风控能力弱</li>
+      <li>账号越老封号率越高：30-90天账号封号率47.0% > 7-30天44.5% > 0-7天37.3%，老号可能已被标记</li>
+      <li>任务2034150224216023040重登率高达36.5%（154/422），cookie大规模失效，疑似IP或设备异常</li>
+      <li>多个任务（2033923系列、2034106系列）封号数完全相同，疑似使用同一批账号池</li>
+    </ul>
+  </div>
+  <div class="insight-box">
+    <h3>封号模式分析</h3>
+    <p><strong>批次集中封号：</strong>任务2034085451264507904(84.1%)、2034083003242201088(76.7%)、2034082860606234624(60.7%) 三个任务封号率极高，且任务ID相近（同一时间段创建），极可能使用了同一批高风险账号或同一IP段，触发FB批量风控。</p>
+    <p><strong>账号类型差异显著：</strong>iCloud账号封号率仅8.8%，远低于Gmail(40%)和Phone(55.8%)。iCloud账号可信度更高，建议优先使用。</p>
+    <p><strong>操作成功率65.6%：</strong>12,710台活跃机器人执行了139,537次操作，平均每台约11次。封号前平均操作次数约13.2次，说明账号在少量操作后即触发风控，操作频率可能过高。</p>
+  </div>
+  <div class="insight-box">
+    <h3>可能的封号原因</h3>
+    <p><strong>1. 账号质量问题：</strong>大量7-30天中等账号(8,578台)封号率44.5%，这批账号可能注册时就已被FB标记为可疑。</p>
+    <p><strong>2. IP集中风险：</strong>多个任务使用相同IP段，FB检测到同一IP大量加粉行为，触发批量封号。</p>
+    <p><strong>3. 操作频率过高：</strong>平均13.2次操作即封号，说明加粉频率超过FB安全阈值，需要降低单账号每日操作次数。</p>
+    <p><strong>4. 设备指纹重复：</strong>任务2034150224216023040重登率36.5%异常高，可能是设备指纹被识别，导致cookie批量失效。</p>
+  </div>
+</div>
+
+<!-- 任务封号明细 -->
+<div class="section">
+  <h2>各任务封号明细（按封号率降序）</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>任务ID</th>
+        <th>总机器人</th>
+        <th>正常</th>
+        <th>重登</th>
+        <th>封号</th>
+        <th>封号率</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034085451264507904</td>
+<td>88</td>
+<td style="color:#68d391">14</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">74</td>
+<td><span class="badge badge-danger">84.1%</span><div class="progress-bar"><div class="progress-fill" style="width:84.1%;background:#fc8181"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034083003242201088</td>
+<td>86</td>
+<td style="color:#68d391">20</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">66</td>
+<td><span class="badge badge-danger">76.7%</span><div class="progress-bar"><div class="progress-fill" style="width:76.7%;background:#fc8181"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034082860606234624</td>
+<td>1,814</td>
+<td style="color:#68d391">677</td>
+<td style="color:#f6ad55">35</td>
+<td style="color:#fc8181">1,102</td>
+<td><span class="badge badge-danger">60.7%</span><div class="progress-bar"><div class="progress-fill" style="width:60.7%;background:#fc8181"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033923157225971712</td>
+<td>109</td>
+<td style="color:#68d391">47</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">62</td>
+<td><span class="badge badge-warning">56.9%</span><div class="progress-bar"><div class="progress-fill" style="width:56.9%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034085257973796864</td>
+<td>796</td>
+<td style="color:#68d391">366</td>
+<td style="color:#f6ad55">10</td>
+<td style="color:#fc8181">420</td>
+<td><span class="badge badge-warning">52.8%</span><div class="progress-bar"><div class="progress-fill" style="width:52.8%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033923637238763520</td>
+<td>166</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">84</td>
+<td><span class="badge badge-warning">50.6%</span><div class="progress-bar"><div class="progress-fill" style="width:50.6%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033923521085902848</td>
+<td>166</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">84</td>
+<td><span class="badge badge-warning">50.6%</span><div class="progress-bar"><div class="progress-fill" style="width:50.6%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033923746664366080</td>
+<td>166</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">84</td>
+<td><span class="badge badge-warning">50.6%</span><div class="progress-bar"><div class="progress-fill" style="width:50.6%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034106176519872512</td>
+<td>147</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">65</td>
+<td><span class="badge badge-warning">44.2%</span><div class="progress-bar"><div class="progress-fill" style="width:44.2%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034101975756914688</td>
+<td>147</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">65</td>
+<td><span class="badge badge-warning">44.2%</span><div class="progress-bar"><div class="progress-fill" style="width:44.2%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034108925199089664</td>
+<td>147</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">65</td>
+<td><span class="badge badge-warning">44.2%</span><div class="progress-bar"><div class="progress-fill" style="width:44.2%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034108566841679872</td>
+<td>147</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">65</td>
+<td><span class="badge badge-warning">44.2%</span><div class="progress-bar"><div class="progress-fill" style="width:44.2%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034106380233293824</td>
+<td>147</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">65</td>
+<td><span class="badge badge-warning">44.2%</span><div class="progress-bar"><div class="progress-fill" style="width:44.2%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033909643471544320</td>
+<td>80</td>
+<td style="color:#68d391">45</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">35</td>
+<td><span class="badge badge-warning">43.8%</span><div class="progress-bar"><div class="progress-fill" style="width:43.8%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034083208473554944</td>
+<td>769</td>
+<td style="color:#68d391">428</td>
+<td style="color:#f6ad55">6</td>
+<td style="color:#fc8181">335</td>
+<td><span class="badge badge-warning">43.6%</span><div class="progress-bar"><div class="progress-fill" style="width:43.6%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034251876371824640</td>
+<td>139</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">57</td>
+<td><span class="badge badge-warning">41.0%</span><div class="progress-bar"><div class="progress-fill" style="width:41.0%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034251166108114944</td>
+<td>139</td>
+<td style="color:#68d391">82</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">57</td>
+<td><span class="badge badge-warning">41.0%</span><div class="progress-bar"><div class="progress-fill" style="width:41.0%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034169500180647936</td>
+<td>1,382</td>
+<td style="color:#68d391">823</td>
+<td style="color:#f6ad55">1</td>
+<td style="color:#fc8181">558</td>
+<td><span class="badge badge-warning">40.4%</span><div class="progress-bar"><div class="progress-fill" style="width:40.4%;background:#f6ad55"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034104133482647552</td>
+<td>123</td>
+<td style="color:#68d391">80</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">43</td>
+<td><span class="badge badge-info">35.0%</span><div class="progress-bar"><div class="progress-fill" style="width:35.0%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034261173759942656</td>
+<td>123</td>
+<td style="color:#68d391">80</td>
+<td style="color:#f6ad55">0</td>
+<td style="color:#fc8181">43</td>
+<td><span class="badge badge-info">35.0%</span><div class="progress-bar"><div class="progress-fill" style="width:35.0%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033823467210637312</td>
+<td>82</td>
+<td style="color:#68d391">49</td>
+<td style="color:#f6ad55">7</td>
+<td style="color:#fc8181">26</td>
+<td><span class="badge badge-info">31.7%</span><div class="progress-bar"><div class="progress-fill" style="width:31.7%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033824539522609152</td>
+<td>82</td>
+<td style="color:#68d391">49</td>
+<td style="color:#f6ad55">7</td>
+<td style="color:#fc8181">26</td>
+<td><span class="badge badge-info">31.7%</span><div class="progress-bar"><div class="progress-fill" style="width:31.7%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033824446085963776</td>
+<td>82</td>
+<td style="color:#68d391">49</td>
+<td style="color:#f6ad55">7</td>
+<td style="color:#fc8181">26</td>
+<td><span class="badge badge-info">31.7%</span><div class="progress-bar"><div class="progress-fill" style="width:31.7%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033824352812896256</td>
+<td>82</td>
+<td style="color:#68d391">49</td>
+<td style="color:#f6ad55">7</td>
+<td style="color:#fc8181">26</td>
+<td><span class="badge badge-info">31.7%</span><div class="progress-bar"><div class="progress-fill" style="width:31.7%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033824198525693952</td>
+<td>82</td>
+<td style="color:#68d391">49</td>
+<td style="color:#f6ad55">7</td>
+<td style="color:#fc8181">26</td>
+<td><span class="badge badge-info">31.7%</span><div class="progress-bar"><div class="progress-fill" style="width:31.7%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033823637239738368</td>
+<td>82</td>
+<td style="color:#68d391">49</td>
+<td style="color:#f6ad55">7</td>
+<td style="color:#fc8181">26</td>
+<td><span class="badge badge-info">31.7%</span><div class="progress-bar"><div class="progress-fill" style="width:31.7%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033910906515025920</td>
+<td>1,561</td>
+<td style="color:#68d391">1,100</td>
+<td style="color:#f6ad55">5</td>
+<td style="color:#fc8181">456</td>
+<td><span class="badge badge-info">29.2%</span><div class="progress-bar"><div class="progress-fill" style="width:29.2%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034150224216023040</td>
+<td>422</td>
+<td style="color:#68d391">146</td>
+<td style="color:#f6ad55">154</td>
+<td style="color:#fc8181">122</td>
+<td><span class="badge badge-info">28.9%</span><div class="progress-bar"><div class="progress-fill" style="width:28.9%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034258028379529216</td>
+<td>1,419</td>
+<td style="color:#68d391">1,072</td>
+<td style="color:#f6ad55">3</td>
+<td style="color:#fc8181">344</td>
+<td><span class="badge badge-info">24.2%</span><div class="progress-bar"><div class="progress-fill" style="width:24.2%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034075423534952448</td>
+<td>4,107</td>
+<td style="color:#68d391">2,688</td>
+<td style="color:#f6ad55">441</td>
+<td style="color:#fc8181">978</td>
+<td><span class="badge badge-info">23.8%</span><div class="progress-bar"><div class="progress-fill" style="width:23.8%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2033909958719492096</td>
+<td>2,657</td>
+<td style="color:#68d391">2,055</td>
+<td style="color:#f6ad55">14</td>
+<td style="color:#fc8181">588</td>
+<td><span class="badge badge-info">22.1%</span><div class="progress-bar"><div class="progress-fill" style="width:22.1%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034262696124928000</td>
+<td>1,070</td>
+<td style="color:#68d391">835</td>
+<td style="color:#f6ad55">4</td>
+<td style="color:#fc8181">231</td>
+<td><span class="badge badge-info">21.6%</span><div class="progress-bar"><div class="progress-fill" style="width:21.6%;background:#63b3ed"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034257341587550208</td>
+<td>2,564</td>
+<td style="color:#68d391">2,055</td>
+<td style="color:#f6ad55">14</td>
+<td style="color:#fc8181">495</td>
+<td><span class="badge badge-success">19.3%</span><div class="progress-bar"><div class="progress-fill" style="width:19.3%;background:#68d391"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034154690089435136</td>
+<td>529</td>
+<td style="color:#68d391">452</td>
+<td style="color:#f6ad55">42</td>
+<td style="color:#fc8181">35</td>
+<td><span class="badge badge-success">6.6%</span><div class="progress-bar"><div class="progress-fill" style="width:6.6%;background:#68d391"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034100953646837760</td>
+<td>529</td>
+<td style="color:#68d391">452</td>
+<td style="color:#f6ad55">42</td>
+<td style="color:#fc8181">35</td>
+<td><span class="badge badge-success">6.6%</span><div class="progress-bar"><div class="progress-fill" style="width:6.6%;background:#68d391"></div></div></td>
+</tr><tr>
+<td style="font-family:monospace;font-size:11px;color:#a0aec0">2034185735518687232</td>
+<td>256</td>
+<td style="color:#68d391">241</td>
+<td style="color:#f6ad55">9</td>
+<td style="color:#fc8181">6</td>
+<td><span class="badge badge-success">2.3%</span><div class="progress-bar"><div class="progress-fill" style="width:2.3%;background:#68d391"></div></div></td>
+</tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 账号类型 & 账号年龄 -->
+<div class="two-col">
+  <div class="section">
+    <h2>账号类型分析</h2>
+    <table>
+      <thead>
+        <tr><th>类型</th><th>总数</th><th>封号</th><th>封号率</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+<td>Gmail</td>
+<td>12,571</td>
+<td style="color:#fc8181">5,027</td>
+<td><span class="badge badge-warning">40.0%</span><div class="progress-bar"><div class="progress-fill" style="width:40.0%;background:#fc8181"></div></div></td>
+</tr><tr>
+<td>Phone</td>
+<td>3,300</td>
+<td style="color:#fc8181">1,843</td>
+<td><span class="badge badge-warning">55.8%</span><div class="progress-bar"><div class="progress-fill" style="width:55.8%;background:#fc8181"></div></div></td>
+</tr><tr>
+<td>iCloud</td>
+<td>34</td>
+<td style="color:#fc8181">3</td>
+<td><span class="badge badge-success">8.8%</span><div class="progress-bar"><div class="progress-fill" style="width:8.8%;background:#fc8181"></div></div></td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section">
+    <h2>账号注册年龄分析</h2>
+    <table>
+      <thead>
+        <tr><th>年龄段</th><th>总数</th><th>封号</th><th>封号率</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+<td>0-7天 (新号)</td>
+<td>3,901</td>
+<td style="color:#fc8181">1,456</td>
+<td><span class="badge badge-info">37.3%</span><div class="progress-bar"><div class="progress-fill" style="width:37.3%;background:#fc8181"></div></div></td>
+</tr><tr>
+<td>7-30天 (中号)</td>
+<td>8,578</td>
+<td style="color:#fc8181">3,818</td>
+<td><span class="badge badge-warning">44.5%</span><div class="progress-bar"><div class="progress-fill" style="width:44.5%;background:#fc8181"></div></div></td>
+</tr><tr>
+<td>30-90天 (老号)</td>
+<td>3,439</td>
+<td style="color:#fc8181">1,615</td>
+<td><span class="badge badge-warning">47.0%</span><div class="progress-bar"><div class="progress-fill" style="width:47.0%;background:#fc8181"></div></div></td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 建议 -->
+<div class="section">
+  <h2>优化建议</h2>
+  <div class="rec-box">
+    <h3>立即行动</h3>
+    <ul>
+      <li>暂停封号率超过60%的任务（2034085451264507904、2034083003242201088、2034082860606234624），排查账号批次和IP问题</li>
+      <li>检查任务2034150224216023040的IP和设备配置，重登率36.5%异常，需立即排查</li>
+      <li>优先使用iCloud账号（封号率仅8.8%），减少Phone类型账号使用比例</li>
+    </ul>
+  </div>
+  <div style="height:12px"></div>
+  <div class="rec-box">
+    <h3>中期优化</h3>
+    <ul>
+      <li>降低单账号每日加粉操作次数，当前平均13.2次即封号，建议控制在5-8次/天</li>
+      <li>分散IP使用，避免同一IP段承载过多机器人，建议每IP不超过3台</li>
+      <li>对7-30天账号增加预热期，先执行低风险操作（浏览、点赞）再执行加粉</li>
+      <li>建立账号健康评分机制，对历史封号率高的账号批次提前预警</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
