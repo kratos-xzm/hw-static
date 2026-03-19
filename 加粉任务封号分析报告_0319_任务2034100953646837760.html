@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FB加粉任务封号分析报告 - 2026-03-19</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; line-height: 1.6; }
+.header { background: linear-gradient(135deg, #1a1f2e 0%, #16213e 100%); padding: 32px 40px; border-bottom: 1px solid #2d3748; }
+.header h1 { font-size: 24px; font-weight: 700; color: #fff; }
+.header .subtitle { color: #718096; margin-top: 4px; font-size: 14px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 32px 40px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.kpi-card { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 12px; padding: 20px; }
+.kpi-card .label { font-size: 12px; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; }
+.kpi-card .value { font-size: 32px; font-weight: 700; margin-top: 8px; }
+.kpi-card .sub { font-size: 12px; color: #718096; margin-top: 4px; }
+.kpi-card.danger .value { color: #fc8181; }
+.kpi-card.warning .value { color: #f6ad55; }
+.kpi-card.success .value { color: #68d391; }
+.kpi-card.info .value { color: #63b3ed; }
+.section { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+.section h2 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #2d3748; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; color: #718096; font-weight: 500; border-bottom: 1px solid #2d3748; }
+td { padding: 10px 12px; border-bottom: 1px solid #1e2535; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #1e2535; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.badge-danger { background: rgba(252,129,129,0.15); color: #fc8181; }
+.badge-warning { background: rgba(246,173,85,0.15); color: #f6ad55; }
+.badge-success { background: rgba(104,211,145,0.15); color: #68d391; }
+.badge-info { background: rgba(99,179,237,0.15); color: #63b3ed; }
+.progress-bar { height: 6px; background: #2d3748; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.progress-fill { height: 100%; border-radius: 3px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.cause-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1e2535; }
+.cause-item:last-child { border-bottom: none; }
+.cause-bar-wrap { flex: 1; margin: 0 16px; }
+.alert-box { background: rgba(252,129,129,0.08); border: 1px solid rgba(252,129,129,0.3); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.alert-box h3 { color: #fc8181; font-size: 14px; margin-bottom: 8px; }
+.alert-box ul { list-style: none; }
+.alert-box ul li { color: #e2e8f0; font-size: 13px; padding: 3px 0; padding-left: 16px; position: relative; }
+.alert-box ul li::before { content: '→'; position: absolute; left: 0; color: #fc8181; }
+.rec-box { background: rgba(104,211,145,0.08); border: 1px solid rgba(104,211,145,0.3); border-radius: 8px; padding: 16px; }
+.rec-box h3 { color: #68d391; font-size: 14px; margin-bottom: 8px; }
+.rec-box ul { list-style: none; }
+.rec-box ul li { color: #e2e8f0; font-size: 13px; padding: 3px 0; padding-left: 16px; position: relative; }
+.rec-box ul li::before { content: '✓'; position: absolute; left: 0; color: #68d391; }
+.insight-box { background: rgba(99,179,237,0.08); border: 1px solid rgba(99,179,237,0.3); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.insight-box h3 { color: #63b3ed; font-size: 14px; margin-bottom: 8px; }
+.insight-box p { color: #e2e8f0; font-size: 13px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>FB加粉任务封号分析报告</h1>
+  <div class="subtitle">分析时间: 2026-03-19 | 任务: 2034100953646837760 &amp; 2034154690089435136 | 两任务共用同一批529台机器人 | status: 1=正常 / 2=需重登 / 3=封号</div>
+</div>
+<div class="container">
+
+<!-- KPI -->
+<div class="kpi-grid">
+  <div class="kpi-card warning">
+    <div class="label">整体封号率</div>
+    <div class="value">6.6%</div>
+    <div class="sub">35 / 529 机器人 (status=3)</div>
+  </div>
+  <div class="kpi-card warning">
+    <div class="label">需重登账号</div>
+    <div class="value">39</div>
+    <div class="sub">占总量 7.4% (status=2，Checkpoint触发)</div>
+  </div>
+  <div class="kpi-card success">
+    <div class="label">正常账号</div>
+    <div class="value">455</div>
+    <div class="sub">占总量 86.0% (status=1)</div>
+  </div>
+  <div class="kpi-card info">
+    <div class="label">加粉成功率</div>
+    <div class="value">59.3%</div>
+    <div class="sub">6,340 / 10,698 次操作 | 人均12次</div>
+  </div>
+</div>
+
+<!-- 核心洞察 -->
+<div class="section">
+  <h2>核心风险洞察</h2>
+  <div class="insight-box">
+    <h3>任务结构说明</h3>
+    <p>两个任务ID（2034100953646837760 和 2034154690089435136）绑定的是<strong>完全相同的529台机器人</strong>，数据完全一致。同一批账号被分配到了两个任务，实际分析对象是同一批机器人。任务从3月17日启动，3月18日全量运行（529台），目前运行约2天。</p>
+  </div>
+  <div class="alert-box">
+    <h3>三大核心风险</h3>
+    <ul>
+      <li><strong>操作频率严重超标</strong>：82.6%的机器人日均加好友超过10次（146台超过20次/天），Facebook频率限制错误占失败量31.2%（1,352次）</li>
+      <li><strong>全部为7天内极新iCloud账号</strong>：529台100%是iCloud账号、100%是7天内新号，新账号风控阈值极低，高频操作极易触发封号</li>
+      <li><strong>代理IP质量问题</strong>：代理403错误705次（16.2%），部分IP已被Facebook封锁；高风险IP 45.196.195.134（12台，封号率25%）需立即停用</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 账号状态 -->
+<div class="section">
+  <h2>账号状态分布</h2>
+  <table>
+    <thead>
+      <tr><th>状态</th><th>含义</th><th>数量</th><th>占比</th><th>风险</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-success">status=1</span></td>
+        <td>正常运行</td>
+        <td style="color:#68d391;font-weight:600">455</td>
+        <td>86.0%</td>
+        <td><span class="badge badge-success">正常</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-warning">status=2</span></td>
+        <td>需重登（Checkpoint触发）</td>
+        <td style="color:#f6ad55;font-weight:600">39</td>
+        <td>7.4%</td>
+        <td><span class="badge badge-warning">需处理</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-danger">status=3</span></td>
+        <td>封号（Facebook Checkpoint）</td>
+        <td style="color:#fc8181;font-weight:600">35</td>
+        <td>6.6%</td>
+        <td><span class="badge badge-danger">已封号</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 账号画像 -->
+<div class="section">
+  <h2>账号画像分析</h2>
+  <div class="two-col">
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">账号类型分布</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>类型</th><th>数量</th><th>封号率</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>iCloud</strong></td>
+            <td>529 (100%)</td>
+            <td><span class="badge badge-warning">6.6%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="color:#f6ad55;font-size:12px;margin-top:10px">⚠️ 账号类型单一，行为模式高度一致，易被批量识别</p>
+    </div>
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">账号注册时长分布</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>注册时长</th><th>数量</th><th>封号率</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>0-7天（极新号）</strong></td>
+            <td>529 (100%)</td>
+            <td><span class="badge badge-warning">6.6%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="color:#fc8181;font-size:12px;margin-top:10px">⚠️ 全部为7天内新号，Facebook对新账号加好友限制约3-5次/天</p>
+    </div>
+  </div>
+</div>
+
+<!-- 操作频率 -->
+<div class="section">
+  <h2>操作频率分析</h2>
+  <div class="two-col">
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">单机器人日均加好友次数分布</h3>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">4-6次/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:2.8%;background:#68d391"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">15台</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">7-10次/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:14.6%;background:#f6ad55"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">77台</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">11-20次/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:55%;background:#fc8181"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">291台</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">20次以上/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:27.6%;background:#fc8181"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">146台</span>
+      </div>
+      <p style="color:#fc8181;font-size:12px;margin-top:12px">⚠️ 82.6%机器人日均操作超过10次，严重超标</p>
+    </div>
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">近7天每日操作趋势</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>日期</th><th>活跃机器人</th><th>总操作</th><th>成功率</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>03-17</td><td>185</td>
+            <td>2,138</td>
+            <td style="color:#f6ad55">60.8%</td>
+          </tr>
+          <tr>
+            <td>03-18</td><td style="color:#63b3ed">529</td>
+            <td>8,560</td>
+            <td style="color:#f6ad55">58.9%</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="color:#718096;font-size:12px;margin-top:10px">任务3/17启动，3/18全量运行，操作量翻4倍</p>
+      <h3 style="font-size:14px;color:#a0aec0;margin:16px 0 12px">操作时段分布（近7天）</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>时段</th><th>操作量</th><th>成功率</th></tr></thead>
+        <tbody>
+          <tr><td>10:00</td><td>2,645</td><td style="color:#f6ad55">54.8%</td></tr>
+          <tr><td>14:00</td><td>2,555</td><td style="color:#68d391">69.6%</td></tr>
+          <tr><td>17:00</td><td>2,828</td><td style="color:#f6ad55">60.2%</td></tr>
+          <tr><td>19:00</td><td>1,890</td><td style="color:#f6ad55">57.2%</td></tr>
+          <tr><td>20:00</td><td style="color:#fc8181">230</td><td style="color:#fc8181">19.1%</td></tr>
+          <tr><td>21:00</td><td>550</td><td style="color:#f6ad55">51.3%</td></tr>
+        </tbody>
+      </table>
+      <p style="color:#fc8181;font-size:12px;margin-top:8px">⚠️ 20:00时段成功率骤降至19.1%，疑似触发频率限制</p>
+    </div>
+  </div>
+</div>
+
+<!-- 失败原因 -->
+<div class="section">
+  <h2>失败原因深度分析（共4,358次失败）</h2>
+  <div class="two-col">
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">失败原因分布</h3>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">Facebook频率限制<br><span style="font-size:10px">(24h/3h暂停)</span></span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:31%;background:#fc8181"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px;font-weight:600">1,352次</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">代理403封锁</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:16%;background:#f6ad55"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px;font-weight:600">705次</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">"不认识此人"<br><span style="font-size:10px">(FB错误码1407036)</span></span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:17%;background:#f6ad55"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px;font-weight:600">735次</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">反垃圾限速<br><span style="font-size:10px">(FB错误码1390008)</span></span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:10%;background:#f6ad55"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px;font-weight:600">447次</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">连接中断/超时</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:12%;background:#4a5568"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px;font-weight:600">527次</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">其他原因</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:14%;background:#4a5568"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px;font-weight:600">592次</span>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">封号前平均操作次数</h3>
+      <div style="background:#0f1117;border-radius:8px;padding:20px;text-align:center;margin-bottom:16px">
+        <div style="font-size:48px;font-weight:700;color:#fc8181">19.5</div>
+        <div style="color:#718096;font-size:13px;margin-top:4px">次成功操作后被封号</div>
+        <div style="color:#a0aec0;font-size:12px;margin-top:8px">账号存活周期极短，约1-2天即触发封号</div>
+      </div>
+      <div class="alert-box" style="margin-bottom:0">
+        <h3>封号时间线规律</h3>
+        <ul>
+          <li>封号前大量 run_type=2007（加好友）连续失败</li>
+          <li>系统持续重试，触发 run_type=3000（状态检查）</li>
+          <li>最终以 500/900 错误码结束，账号被标记封号</li>
+          <li>封号集中在20:00时段（成功率仅19.1%）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IP分析 -->
+<div class="section">
+  <h2>IP聚集风险分析</h2>
+  <p style="color:#718096;font-size:12px;margin-bottom:16px">共843个IP，高风险IP（>10台/IP）33个，最高单IP绑定20台机器人</p>
+  <div class="two-col">
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">IP风险分布</h3>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">高风险 (&gt;10台/IP)</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:3.9%;background:#fc8181"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">33个IP</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">中风险 (5-10台/IP)</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:8.3%;background:#f6ad55"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">70个IP</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">低风险 (&lt;5台/IP)</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:87.8%;background:#68d391"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">740个IP</span>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">高封号率IP（需立即处理）</h3>
+      <table style="font-size:12px">
+        <thead><tr><th>IP地址</th><th>绑定机器人</th><th>封号率</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="font-family:monospace">45.196.195.134</td>
+            <td>12台</td>
+            <td><span class="badge badge-danger">25.0%</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:monospace">156.228.211.80</td>
+            <td>16台</td>
+            <td><span class="badge badge-danger">18.8%</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:monospace">45.196.195.22</td>
+            <td>18台</td>
+            <td><span class="badge badge-danger">16.7%</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:monospace">151.242.47.207</td>
+            <td>18台</td>
+            <td><span class="badge badge-danger">16.7%</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:monospace">156.228.211.46</td>
+            <td>18台</td>
+            <td><span class="badge badge-danger">16.7%</span></td>
+          </tr>
+          <tr>
+            <td style="font-family:monospace">156.228.211.171</td>
+            <td>20台</td>
+            <td><span class="badge badge-warning">15.0%</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 结论与建议 -->
+<div class="section">
+  <h2>风险结论与优化建议</h2>
+  <div class="two-col">
+    <div class="alert-box" style="margin-bottom:0">
+      <h3>当前风险评估</h3>
+      <ul>
+        <li>封号率6.6%，接近安全阈值（5%），需立即干预</li>
+        <li>全部为7天内极新iCloud账号，是封号的根本原因</li>
+        <li>82.6%机器人日均操作超10次，严重超出新账号承受上限</li>
+        <li>代理IP质量差，403错误占失败量16.2%，部分IP已被FB封锁</li>
+        <li>加好友目标不精准，735次"不认识此人"错误加速风控触发</li>
+        <li>封号前仅19.5次成功操作，账号存活周期极短（约1-2天）</li>
+      </ul>
+    </div>
+    <div class="rec-box">
+      <h3>优化建议（优先级排序）</h3>
+      <ul>
+        <li>【紧急】新号日加好友上限降至3次以内，等账号养熟（7天后）再提频</li>
+        <li>【紧急】立即停用封号率&gt;15%的6个高风险IP，更换代理</li>
+        <li>【高】处理39个需重登账号（status=2），人工完成Checkpoint验证后恢复</li>
+        <li>【高】引入多种账号类型（Gmail/Phone），避免iCloud单一类型被批量识别</li>
+        <li>【中】优化加好友目标，提高目标与账号的关联度，减少"不认识此人"错误</li>
+        <li>【中】操作间隔加入随机延迟（30-120秒），避免机械化行为特征</li>
+        <li>【低】单IP绑定机器人数控制在5个以内，降低IP聚集风险</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
