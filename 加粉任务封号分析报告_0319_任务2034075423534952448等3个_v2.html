@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FB加粉任务封号分析报告 - 2026-03-19</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; line-height: 1.6; }
+.header { background: linear-gradient(135deg, #1a1f2e 0%, #16213e 100%); padding: 32px 40px; border-bottom: 1px solid #2d3748; }
+.header h1 { font-size: 24px; font-weight: 700; color: #fff; }
+.header .subtitle { color: #718096; margin-top: 4px; font-size: 14px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 32px 40px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.kpi-card { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 12px; padding: 20px; }
+.kpi-card .label { font-size: 12px; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; }
+.kpi-card .value { font-size: 32px; font-weight: 700; margin-top: 8px; }
+.kpi-card .sub { font-size: 12px; color: #718096; margin-top: 4px; }
+.kpi-card.danger .value { color: #fc8181; }
+.kpi-card.warning .value { color: #f6ad55; }
+.kpi-card.success .value { color: #68d391; }
+.kpi-card.info .value { color: #63b3ed; }
+.section { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+.section h2 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #2d3748; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; color: #718096; font-weight: 500; border-bottom: 1px solid #2d3748; }
+td { padding: 10px 12px; border-bottom: 1px solid #1e2535; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #1e2535; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.badge-danger { background: rgba(252,129,129,0.15); color: #fc8181; }
+.badge-warning { background: rgba(246,173,85,0.15); color: #f6ad55; }
+.badge-success { background: rgba(104,211,145,0.15); color: #68d391; }
+.badge-info { background: rgba(99,179,237,0.15); color: #63b3ed; }
+.progress-bar { height: 6px; background: #2d3748; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.progress-fill { height: 100%; border-radius: 3px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.cause-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1e2535; }
+.cause-item:last-child { border-bottom: none; }
+.cause-bar-wrap { flex: 1; margin: 0 16px; }
+.alert-box { background: rgba(252,129,129,0.08); border: 1px solid rgba(252,129,129,0.3); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.alert-box h3 { color: #fc8181; font-size: 14px; margin-bottom: 8px; }
+.alert-box ul { list-style: none; }
+.alert-box ul li { color: #e2e8f0; font-size: 13px; padding: 3px 0; padding-left: 16px; position: relative; }
+.alert-box ul li::before { content: '→'; position: absolute; left: 0; color: #fc8181; }
+.rec-box { background: rgba(104,211,145,0.08); border: 1px solid rgba(104,211,145,0.3); border-radius: 8px; padding: 16px; }
+.rec-box h3 { color: #68d391; font-size: 14px; margin-bottom: 8px; }
+.rec-box ul { list-style: none; }
+.rec-box ul li { color: #e2e8f0; font-size: 13px; padding: 3px 0; padding-left: 16px; position: relative; }
+.rec-box ul li::before { content: '✓'; position: absolute; left: 0; color: #68d391; }
+.insight-box { background: rgba(99,179,237,0.08); border: 1px solid rgba(99,179,237,0.3); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.insight-box h3 { color: #63b3ed; font-size: 14px; margin-bottom: 8px; }
+.insight-box p { color: #e2e8f0; font-size: 13px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>FB加粉任务封号分析报告</h1>
+  <div class="subtitle">分析时间: 2026-03-19 | 任务: 2034075423534952448 / 2034293793290915840 / 2034298707794526208 | status: 1=正常 / 2=需重登 / 3=封号</div>
+</div>
+<div class="container">
+
+<!-- KPI -->
+<div class="kpi-grid">
+  <div class="kpi-card danger">
+    <div class="label">整体封号率</div>
+    <div class="value">18.2%</div>
+    <div class="sub">1,491 / 8,638 机器人 (去重后)</div>
+  </div>
+  <div class="kpi-card warning">
+    <div class="label">需重登账号</div>
+    <div class="value">890</div>
+    <div class="sub">占总量 10.3% (status=2)</div>
+  </div>
+  <div class="kpi-card info">
+    <div class="label">正常账号</div>
+    <div class="value">6,257</div>
+    <div class="sub">占总量 72.4% (status=1)</div>
+  </div>
+  <div class="kpi-card info">
+    <div class="label">加粉成功率</div>
+    <div class="value">45.0%</div>
+    <div class="sub">107,210 / 239,082 次操作</div>
+  </div>
+</div>
+
+<!-- 核心洞察 -->
+<div class="section">
+  <h2>核心风险洞察</h2>
+  <div class="alert-box">
+    <h3>三大核心风险</h3>
+    <ul>
+      <li><strong>Phone账号封号率极高</strong>：手机号账号封号率31.7-36.9%，是Gmail账号（5.8-17.2%）的2-6倍，Phone账号是封号重灾区</li>
+      <li><strong>7-30天账号最危险</strong>：7-30天账号封号率高达31.7%（任务2034075423534952448），远超0-7天新号（7.6-24.8%）</li>
+      <li><strong>任务2034298707794526208风险最高</strong>：封号率24.4%，封号前平均仅18.8次操作，账号存活周期极短</li>
+    </ul>
+  </div>
+  <div class="insight-box">
+    <h3>任务对比分析</h3>
+    <p><strong>任务2034293793290915840表现最佳</strong>：封号率仅7.1%，封号前平均32.1次操作，是三个任务中最安全的。该任务的成功经验值得复制到其他任务。</p>
+    <p><strong>任务2034075423534952448和2034298707794526208风险较高</strong>：封号率分别为23.1%和24.4%，均超过20%安全阈值，需立即干预。</p>
+  </div>
+</div>
+
+<!-- 任务封号明细 -->
+<div class="section">
+  <h2>各任务封号明细对比</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>任务ID</th>
+        <th>正常 (s=1)</th>
+        <th>封号 (s=3)</th>
+        <th>重登 (s=2)</th>
+        <th>合计</th>
+        <th>封号率</th>
+        <th>风险等级</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034298707794526208</td>
+        <td>825</td>
+        <td style="color:#fc8181;font-weight:600">311</td>
+        <td style="color:#f6ad55">140</td>
+        <td>1,276</td>
+        <td>
+          24.4%
+          <div class="progress-bar"><div class="progress-fill" style="width:24.4%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034075423534952448</td>
+        <td>2,726</td>
+        <td style="color:#fc8181;font-weight:600">949</td>
+        <td style="color:#f6ad55">432</td>
+        <td>4,107</td>
+        <td>
+          23.1%
+          <div class="progress-bar"><div class="progress-fill" style="width:23.1%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034293793290915840</td>
+        <td>2,706</td>
+        <td style="color:#68d391;font-weight:600">231</td>
+        <td style="color:#f6ad55">318</td>
+        <td>3,255</td>
+        <td>
+          7.1%
+          <div class="progress-bar"><div class="progress-fill" style="width:7.1%;background:#68d391"></div></div>
+        </td>
+        <td><span class="badge badge-success">低风险</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="color:#718096;font-size:12px;margin-top:12px">封号前平均操作次数：任务2034293793290915840最高（32.1次），任务2034298707794526208最低（18.8次）</p>
+</div>
+
+<!-- 账号画像分析 -->
+<div class="section">
+  <h2>账号画像分析</h2>
+  <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">按账号类型封号率对比（分任务）</h3>
+  <table>
+    <thead>
+      <tr><th>任务ID</th><th>账号类型</th><th>总数</th><th>正常</th><th>封号</th><th>封号率</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td><strong>Phone</strong></td>
+        <td>1,238</td>
+        <td>608</td>
+        <td style="color:#fc8181">457</td>
+        <td><span class="badge badge-danger">36.9%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td><strong>Gmail</strong></td>
+        <td>2,867</td>
+        <td>2,117</td>
+        <td style="color:#f6ad55">492</td>
+        <td><span class="badge badge-warning">17.2%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034293793290915840</td>
+        <td><strong>Phone</strong></td>
+        <td>802</td>
+        <td>595</td>
+        <td style="color:#68d391">89</td>
+        <td><span class="badge badge-warning">11.1%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034293793290915840</td>
+        <td><strong>Gmail</strong></td>
+        <td>2,451</td>
+        <td>2,110</td>
+        <td style="color:#68d391">142</td>
+        <td><span class="badge badge-success">5.8%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034298707794526208</td>
+        <td><strong>Phone</strong></td>
+        <td>652</td>
+        <td>368</td>
+        <td style="color:#fc8181">207</td>
+        <td><span class="badge badge-danger">31.7%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034298707794526208</td>
+        <td><strong>Gmail</strong></td>
+        <td>624</td>
+        <td>457</td>
+        <td style="color:#f6ad55">104</td>
+        <td><span class="badge badge-warning">16.7%</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="color:#fc8181;font-size:12px;margin-top:12px">⚠️ Phone账号封号率31.7-36.9%，是Gmail账号（5.8-17.2%）的2-6倍，建议优先使用Gmail账号</p>
+
+  <h3 style="font-size:14px;color:#a0aec0;margin:24px 0 12px">按账号注册时长封号率对比（分任务）</h3>
+  <table>
+    <thead>
+      <tr><th>任务ID</th><th>注册时长</th><th>总数</th><th>正常</th><th>封号</th><th>封号率</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td><strong>7-30天</strong></td>
+        <td>2,281</td>
+        <td>1,126</td>
+        <td style="color:#fc8181">724</td>
+        <td><span class="badge badge-danger">31.7%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td><strong>0-7天</strong></td>
+        <td>1,822</td>
+        <td>1,598</td>
+        <td style="color:#f6ad55">224</td>
+        <td><span class="badge badge-warning">12.3%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034293793290915840</td>
+        <td><strong>0-7天</strong></td>
+        <td>1,727</td>
+        <td>1,595</td>
+        <td style="color:#68d391">132</td>
+        <td><span class="badge badge-success">7.6%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034293793290915840</td>
+        <td><strong>7-30天</strong></td>
+        <td>1,524</td>
+        <td>1,109</td>
+        <td style="color:#68d391">98</td>
+        <td><span class="badge badge-success">6.4%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034298707794526208</td>
+        <td><strong>0-7天</strong></td>
+        <td>985</td>
+        <td>636</td>
+        <td style="color:#fc8181">244</td>
+        <td><span class="badge badge-danger">24.8%</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034298707794526208</td>
+        <td><strong>7-30天</strong></td>
+        <td>266</td>
+        <td>178</td>
+        <td style="color:#f6ad55">58</td>
+        <td><span class="badge badge-warning">21.8%</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="color:#fc8181;font-size:12px;margin-top:12px">⚠️ 任务2034075423534952448的7-30天账号封号率高达31.7%，需立即降低该时段账号的操作频率</p>
+</div>
+
+<!-- 操作频率分析 -->
+<div class="section">
+  <h2>操作频率分析</h2>
+  <div class="two-col">
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">任务2034075423534952448</h3>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">20次以上/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:33%;background:#fc8181"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">1,342台</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">11-20次/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:44%;background:#fc8181"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">1,790台</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">7-10次/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:21%;background:#f6ad55"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">865台</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">4-6次/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:2%;background:#68d391"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">68台</span>
+      </div>
+      <p style="color:#fc8181;font-size:12px;margin-top:10px">⚠️ 77%机器人日均操作超过10次</p>
+    </div>
+    <div>
+      <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">任务2034293793290915840</h3>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">20次以上/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:35%;background:#fc8181"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">1,130台</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">11-20次/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:47%;background:#fc8181"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">1,526台</span>
+      </div>
+      <div class="cause-item">
+        <span style="color:#718096;font-size:12px">7-10次/天</span>
+        <div class="cause-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:18%;background:#f6ad55"></div></div>
+        </div>
+        <span style="color:#e2e8f0;font-size:13px">587台</span>
+      </div>
+      <p style="color:#f6ad55;font-size:12px;margin-top:10px">⚠️ 82%机器人日均操作超过10次</p>
+    </div>
+  </div>
+  <div style="margin-top:20px">
+    <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">任务2034298707794526208（最保守）</h3>
+    <div class="two-col">
+      <div>
+        <div class="cause-item">
+          <span style="color:#718096;font-size:12px">4-6次/天</span>
+          <div class="cause-bar-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:39%;background:#68d391"></div></div>
+          </div>
+          <span style="color:#e2e8f0;font-size:13px">499台</span>
+        </div>
+        <div class="cause-item">
+          <span style="color:#718096;font-size:12px">11-20次/天</span>
+          <div class="cause-bar-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:43%;background:#fc8181"></div></div>
+          </div>
+          <span style="color:#e2e8f0;font-size:13px">543台</span>
+        </div>
+        <div class="cause-item">
+          <span style="color:#718096;font-size:12px">7-10次/天</span>
+          <div class="cause-bar-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:17%;background:#f6ad55"></div></div>
+          </div>
+          <span style="color:#e2e8f0;font-size:13px">211台</span>
+        </div>
+        <div class="cause-item">
+          <span style="color:#718096;font-size:12px">20次以上/天</span>
+          <div class="cause-bar-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:1%;background:#fc8181"></div></div>
+          </div>
+          <span style="color:#e2e8f0;font-size:13px">22台</span>
+        </div>
+      </div>
+      <div>
+        <p style="color:#68d391;font-size:13px;line-height:1.8">该任务操作频率最保守，39%机器人日均仅4-6次操作，但封号率仍达24.4%，说明<strong>Phone账号类型</strong>和<strong>0-7天新号</strong>是主要风险因素，而非操作频率。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IP聚集分析 -->
+<div class="section">
+  <h2>IP聚集风险分析</h2>
+  <p style="color:#718096;font-size:12px;margin-bottom:16px">任务2034075423534952448发现高风险IP：gate2.ipweb.cc绑定192台机器人，封号率27.1%</p>
+  <table>
+    <thead>
+      <tr><th>任务ID</th><th>IP地址</th><th>绑定机器人数</th><th>封号数</th><th>封号率</th><th>风险</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td style="font-family:monospace;font-size:11px">149.88.204.243</td>
+        <td>20</td>
+        <td style="color:#fc8181">9</td>
+        <td>45.0%</td>
+        <td><span class="badge badge-danger">极高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td style="font-family:monospace;font-size:11px">155.117.53.46</td>
+        <td>20</td>
+        <td style="color:#fc8181">8</td>
+        <td>40.0%</td>
+        <td><span class="badge badge-danger">极高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td style="font-family:monospace;font-size:11px">149.119.63.206</td>
+        <td>20</td>
+        <td style="color:#fc8181">8</td>
+        <td>40.0%</td>
+        <td><span class="badge badge-danger">极高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td style="font-family:monospace;font-size:11px">149.87.141.174</td>
+        <td>24</td>
+        <td style="color:#fc8181">8</td>
+        <td>33.3%</td>
+        <td><span class="badge badge-danger">极高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td style="font-family:monospace;font-size:11px">149.88.172.203</td>
+        <td>22</td>
+        <td style="color:#fc8181">7</td>
+        <td>31.8%</td>
+        <td><span class="badge badge-danger">极高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#718096">2034075423534952448</td>
+        <td style="font-family:monospace;font-size:11px">gate2.ipweb.cc</td>
+        <td style="color:#fc8181;font-weight:600">192</td>
+        <td style="color:#fc8181">52</td>
+        <td>27.1%</td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="color:#fc8181;font-size:12px;margin-top:12px">⚠️ 6个IP封号率超过27%，需立即停用并更换代理</p>
+</div>
+
+<!-- 综合结论与建议 -->
+<div class="section">
+  <h2>风险结论与优化建议</h2>
+  <div class="two-col">
+    <div class="alert-box" style="margin-bottom:0">
+      <h3>当前风险评估</h3>
+      <ul>
+        <li>整体封号率18.2%，远超5%安全阈值，情况严峻</li>
+        <li><strong>Phone账号是封号重灾区</strong>：封号率31.7-36.9%，是Gmail的2-6倍</li>
+        <li><strong>7-30天账号最危险</strong>：任务2034075423534952448的7-30天账号封号率31.7%</li>
+        <li>任务2034075423534952448和2034298707794526208封号率超20%，需立即暂停排查</li>
+        <li>任务2034293793290915840表现最佳（7.1%），其策略值得复制</li>
+        <li>6个高风险IP封号率27-45%，需立即停用</li>
+      </ul>
+    </div>
+    <div class="rec-box">
+      <h3>优化建议（优先级排序）</h3>
+      <ul>
+        <li>【紧急】停用Phone账号，全面切换为Gmail账号（封号率降低2-6倍）</li>
+        <li>【紧急】暂停任务2034075423534952448和2034298707794526208，排查后重启</li>
+        <li>【紧急】停用6个高风险IP（封号率27-45%），更换代理</li>
+        <li>【高】复制任务2034293793290915840的成功策略到其他任务</li>
+        <li>【高】7-30天账号日操作降至5次以内，延长养号期</li>
+        <li>【中】处理890个需重登账号（status=2），人工完成验证后恢复</li>
+        <li>【中】单IP绑定机器人数控制在10个以内，gate2.ipweb.cc（192台）需立即分散</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
