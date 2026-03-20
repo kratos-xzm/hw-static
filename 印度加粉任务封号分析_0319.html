@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FB加粉任务封号分析报告 - 2026-03-20</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; line-height: 1.6; }
+.header { background: linear-gradient(135deg, #1a1f2e 0%, #16213e 100%); padding: 32px 40px; border-bottom: 1px solid #2d3748; }
+.header h1 { font-size: 24px; font-weight: 700; color: #fff; }
+.header .subtitle { color: #718096; margin-top: 4px; font-size: 14px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 32px 40px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.kpi-card { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 12px; padding: 20px; }
+.kpi-card .label { font-size: 12px; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; }
+.kpi-card .value { font-size: 32px; font-weight: 700; margin-top: 8px; }
+.kpi-card .sub { font-size: 12px; color: #718096; margin-top: 4px; }
+.kpi-card.danger .value { color: #fc8181; }
+.kpi-card.warning .value { color: #f6ad55; }
+.kpi-card.success .value { color: #68d391; }
+.kpi-card.info .value { color: #63b3ed; }
+.section { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+.section h2 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #2d3748; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; color: #718096; font-weight: 500; border-bottom: 1px solid #2d3748; }
+td { padding: 10px 12px; border-bottom: 1px solid #1e2535; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #1e2535; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.badge-danger { background: rgba(252,129,129,0.15); color: #fc8181; }
+.badge-warning { background: rgba(246,173,85,0.15); color: #f6ad55; }
+.badge-success { background: rgba(104,211,145,0.15); color: #68d391; }
+.badge-info { background: rgba(99,179,237,0.15); color: #63b3ed; }
+.progress-bar { height: 6px; background: #2d3748; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.progress-fill { height: 100%; border-radius: 3px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.alert-box { background: rgba(252,129,129,0.08); border: 1px solid rgba(252,129,129,0.3); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.alert-box h3 { color: #fc8181; font-size: 14px; margin-bottom: 8px; }
+.alert-box ul { list-style: none; }
+.alert-box ul li { color: #e2e8f0; font-size: 13px; padding: 3px 0; padding-left: 16px; position: relative; }
+.alert-box ul li::before { content: '→'; position: absolute; left: 0; color: #fc8181; }
+.rec-box { background: rgba(104,211,145,0.08); border: 1px solid rgba(104,211,145,0.3); border-radius: 8px; padding: 16px; }
+.rec-box h3 { color: #68d391; font-size: 14px; margin-bottom: 8px; }
+.rec-box ul { list-style: none; }
+.rec-box ul li { color: #e2e8f0; font-size: 13px; padding: 3px 0; padding-left: 16px; position: relative; }
+.rec-box ul li::before { content: '✓'; position: absolute; left: 0; color: #68d391; }
+.insight-box { background: rgba(99,179,237,0.08); border: 1px solid rgba(99,179,237,0.3); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.insight-box h3 { color: #63b3ed; font-size: 14px; margin-bottom: 8px; }
+.insight-box p { color: #e2e8f0; font-size: 13px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>FB加粉任务封号分析报告</h1>
+  <div class="subtitle">分析时间: 2026-03-20 | 任务: 2034469052137295873 / 2034470286839730176 / 2034470921773469696 / 2034473989815111680 / 2034493517303083008 / 2034493613528940544 / 2034493722006089728 / 2034502137075953664 / 2034502854767640576 / 2034503743234609152 / 2034504819324837888 / 2034602548077400064 / 2034608025796616192 / 2034608329057103872 / 2034610036507930624 | status: 1=正常 / 2=需重登 / 3=封号</div>
+</div>
+<div class="container">
+
+<!-- KPI -->
+<div class="kpi-grid">
+  <div class="kpi-card danger">
+    <div class="label">整体封号率</div>
+    <div class="value">69.39%</div>
+    <div class="sub">5435 / 7832 机器人 (去重后)</div>
+  </div>
+  <div class="kpi-card info">
+    <div class="label">分析任务数</div>
+    <div class="value">0</div>
+    <div class="sub">任务维度分析</div>
+  </div>
+  <div class="kpi-card info">
+    <div class="label">正常账号</div>
+    <div class="value">0</div>
+    <div class="sub">占总量 0.0%</div>
+  </div>
+  <div class="kpi-card warning">
+    <div class="label">需重登账号</div>
+    <div class="value">0</div>
+    <div class="sub">占总量 0.0%</div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>核心风险洞察</h2>
+  <div class="insight-box">
+    <h3>分析说明</h3>
+    <p>本报告基于 hw_fans 数据库实时数据生成，分析了指定任务的机器人账号封号模式、账号画像、操作频率、IP聚集等多维度风险因素。</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>各任务封号明细对比</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>任务ID</th>
+        <th>正常 (s=1)</th>
+        <th>封号 (s=3)</th>
+        <th>重登 (s=2)</th>
+        <th>合计</th>
+        <th>封号率</th>
+        <th>风险等级</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034504819324837888</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">767</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1382</td>
+        <td>
+          55.50%
+          <div class="progress-bar"><div class="progress-fill" style="width:55.50%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034502854767640576</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">767</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1382</td>
+        <td>
+          55.50%
+          <div class="progress-bar"><div class="progress-fill" style="width:55.50%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034502137075953664</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">747</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1952</td>
+        <td>
+          38.27%
+          <div class="progress-bar"><div class="progress-fill" style="width:38.27%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034610036507930624</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">683</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1927</td>
+        <td>
+          35.44%
+          <div class="progress-bar"><div class="progress-fill" style="width:35.44%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034503743234609152</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">404</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1118</td>
+        <td>
+          36.14%
+          <div class="progress-bar"><div class="progress-fill" style="width:36.14%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034493722006089728</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">273</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1243</td>
+        <td>
+          21.96%
+          <div class="progress-bar"><div class="progress-fill" style="width:21.96%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034473989815111680</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">273</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1243</td>
+        <td>
+          21.96%
+          <div class="progress-bar"><div class="progress-fill" style="width:21.96%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034493613528940544</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">244</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1000</td>
+        <td>
+          24.40%
+          <div class="progress-bar"><div class="progress-fill" style="width:24.40%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034470921773469696</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">244</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1000</td>
+        <td>
+          24.40%
+          <div class="progress-bar"><div class="progress-fill" style="width:24.40%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034608329057103872</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">188</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1150</td>
+        <td>
+          16.35%
+          <div class="progress-bar"><div class="progress-fill" style="width:16.35%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034493517303083008</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">188</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1000</td>
+        <td>
+          18.80%
+          <div class="progress-bar"><div class="progress-fill" style="width:18.80%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034470286839730176</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">188</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1000</td>
+        <td>
+          18.80%
+          <div class="progress-bar"><div class="progress-fill" style="width:18.80%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034469052137295873</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">188</td>
+        <td style="color:#f6ad55">0</td>
+        <td>1000</td>
+        <td>
+          18.80%
+          <div class="progress-bar"><div class="progress-fill" style="width:18.80%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034608025796616192</td>
+        <td>0</td>
+        <td style="color:#fc8181;font-weight:600">171</td>
+        <td style="color:#f6ad55">0</td>
+        <td>927</td>
+        <td>
+          18.45%
+          <div class="progress-bar"><div class="progress-fill" style="width:18.45%;background:#fc8181"></div></div>
+        </td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">2034602548077400064</td>
+        <td>0</td>
+        <td style="color:#f6ad55;font-weight:600">110</td>
+        <td style="color:#f6ad55">0</td>
+        <td>917</td>
+        <td>
+          12.00%
+          <div class="progress-bar"><div class="progress-fill" style="width:12.00%;background:#f6ad55"></div></div>
+        </td>
+        <td><span class="badge badge-warning">中风险</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>账号画像分析</h2>
+  <h3 style="font-size:14px;color:#a0aec0;margin-bottom:12px">按账号类型封号率对比</h3>
+  <table>
+    <thead>
+      <tr><th>账号类型</th><th>总数</th><th>正常</th><th>封号</th><th>封号率</th></tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><strong>Gmail</strong></td>
+            <td>7291</td>
+            <td>11617</td>
+            <td style="color:#fc8181">4988</td>
+            <td><span class="badge badge-danger">68.4%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gmail</strong></td>
+            <td>528</td>
+            <td>904</td>
+            <td style="color:#fc8181">438</td>
+            <td><span class="badge badge-danger">83.0%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gmail</strong></td>
+            <td>9</td>
+            <td>4</td>
+            <td style="color:#fc8181">13</td>
+            <td><span class="badge badge-danger">144.4%</span></td>
+          </tr>
+          <tr>
+            <td><strong>iCloud</strong></td>
+            <td>4</td>
+            <td>4</td>
+            <td style="color:#fc8181">1</td>
+            <td><span class="badge badge-danger">25.0%</span></td>
+          </tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:14px;color:#a0aec0;margin:24px 0 12px">按账号注册时长封号率对比</h3>
+  <table>
+    <thead>
+      <tr><th>注册时长</th><th>总数</th><th>正常</th><th>封号</th><th>封号率</th></tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><strong>0-7d</strong></td>
+            <td>3121</td>
+            <td>7984</td>
+            <td style="color:#fc8181">2043</td>
+            <td><span class="badge badge-danger">65.5%</span></td>
+          </tr>
+          <tr>
+            <td><strong>7-30d</strong></td>
+            <td>1931</td>
+            <td>2105</td>
+            <td style="color:#fc8181">1321</td>
+            <td><span class="badge badge-danger">68.4%</span></td>
+          </tr>
+          <tr>
+            <td><strong>30-90d</strong></td>
+            <td>2780</td>
+            <td>2440</td>
+            <td style="color:#fc8181">2076</td>
+            <td><span class="badge badge-danger">74.7%</span></td>
+          </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>操作频率分析</h2>
+  <p style="color:#718096;font-size:12px">基于 t_robot_run_method 表统计各机器人日均操作次数分布</p>
+</div>
+
+<div class="section">
+  <h2>IP聚集风险分析</h2>
+  <table>
+    <thead>
+      <tr><th>IP地址</th><th>绑定机器人数</th><th>封号数</th><th>封号率</th><th>风险</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">103.217.154.4</td>
+        <td>45</td>
+        <td style="color:#fc8181">6</td>
+        <td>13.3%</td>
+        <td><span class="badge badge-warning">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">203.171.244.218</td>
+        <td>40</td>
+        <td style="color:#fc8181">9</td>
+        <td>22.5%</td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">103.75.195.30</td>
+        <td>35</td>
+        <td style="color:#fc8181">4</td>
+        <td>11.4%</td>
+        <td><span class="badge badge-warning">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">45.248.193.65</td>
+        <td>29</td>
+        <td style="color:#fc8181">4</td>
+        <td>13.8%</td>
+        <td><span class="badge badge-warning">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">45.248.192.241</td>
+        <td>15</td>
+        <td style="color:#fc8181">0</td>
+        <td>0.0%</td>
+        <td><span class="badge badge-warning">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">103.93.102.160</td>
+        <td>14</td>
+        <td style="color:#fc8181">7</td>
+        <td>50.0%</td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">103.93.102.168</td>
+        <td>14</td>
+        <td style="color:#fc8181">6</td>
+        <td>42.9%</td>
+        <td><span class="badge badge-danger">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">103.68.42.25</td>
+        <td>12</td>
+        <td style="color:#fc8181">0</td>
+        <td>0.0%</td>
+        <td><span class="badge badge-warning">高风险</span></td>
+      </tr>
+      <tr>
+        <td style="font-family:monospace;font-size:11px">103.93.102.164</td>
+        <td>11</td>
+        <td style="color:#fc8181">2</td>
+        <td>18.2%</td>
+        <td><span class="badge badge-warning">高风险</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>风险结论与优化建议</h2>
+  <div class="two-col">
+    <div class="alert-box" style="margin-bottom:0">
+      <h3>当前风险评估</h3>
+      <ul>
+        <li>基于数据库实时数据分析生成</li>
+        <li>建议结合具体业务场景调整策略</li>
+      </ul>
+    </div>
+    <div class="rec-box">
+      <h3>优化建议</h3>
+      <ul>
+        <li>定期监控封号率变化趋势</li>
+        <li>优化账号类型和注册时长分布</li>
+        <li>控制操作频率和IP聚集度</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
