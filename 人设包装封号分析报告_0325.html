@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人设包装任务封号分析报告 - 3.25</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+  .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 12px; margin-bottom: 24px; }
+  .header h1 { font-size: 24px; color: #fff; margin-bottom: 8px; }
+  .header p { color: rgba(255,255,255,0.8); font-size: 14px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { background: #1a1a2e; border-radius: 10px; padding: 20px; border: 1px solid #2a2a4a; }
+  .kpi-card .label { font-size: 12px; color: #888; margin-bottom: 8px; }
+  .kpi-card .value { font-size: 28px; font-weight: bold; }
+  .kpi-card .value.danger { color: #ff4757; }
+  .kpi-card .value.warning { color: #ffa502; }
+  .kpi-card .value.safe { color: #2ed573; }
+  .section { background: #1a1a2e; border-radius: 10px; padding: 20px; margin-bottom: 20px; border: 1px solid #2a2a4a; }
+  .section h2 { font-size: 16px; color: #a78bfa; margin-bottom: 16px; border-bottom: 1px solid #2a2a4a; padding-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #2a2a4a; color: #a78bfa; padding: 10px 12px; text-align: left; }
+  td { padding: 9px 12px; border-bottom: 1px solid #1f1f3a; }
+  tr:hover td { background: #1f1f3a; }
+  .alert { background: rgba(255,71,87,0.15); border: 1px solid rgba(255,71,87,0.4); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+  .alert h3 { color: #ff4757; font-size: 14px; margin-bottom: 6px; }
+  .alert p, .alert li { color: #ccc; font-size: 13px; line-height: 1.6; }
+  .info { background: rgba(102,126,234,0.15); border: 1px solid rgba(102,126,234,0.4); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+  .info h3 { color: #667eea; font-size: 14px; margin-bottom: 6px; }
+  .info p, .info li { color: #ccc; font-size: 13px; line-height: 1.6; }
+  .recommend { background: rgba(46,213,115,0.1); border: 1px solid rgba(46,213,115,0.3); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+  .recommend h3 { color: #2ed573; font-size: 14px; margin-bottom: 8px; }
+  .recommend li { color: #ccc; font-size: 13px; line-height: 1.8; }
+  ul, ol { padding-left: 18px; }
+  .tag { display: inline-block; background: rgba(255,71,87,0.2); color: #ff6b81; border-radius: 4px; padding: 2px 8px; font-size: 11px; margin: 2px; }
+  .tag.orange { background: rgba(255,165,2,0.2); color: #ffa502; }
+  .tag.green { background: rgba(46,213,115,0.15); color: #2ed573; }
+  .flow-box { background: #12122a; border-radius: 8px; padding: 14px 16px; font-family: monospace; font-size: 12px; color: #ccc; line-height: 2; margin-top: 8px; }
+  .flow-box .step-ok { color: #2ed573; }
+  .flow-box .step-fail { color: #ff4757; }
+  .flow-box .step-warn { color: #ffa502; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>人设包装任务封号原因分析报告</h1>
+  <p>任务ID: 2036704607622250496 (325印度包装3月1) &nbsp;|&nbsp; 2036705989490364416 (325印度包装3月1-2)</p>
+  <p>分析时间: 2026-03-25 &nbsp;|&nbsp; 数据来源: hw_fans MySQL</p>
+</div>
+
+<!-- KPI 卡片 -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="label">总机器人数</div>
+    <div class="value" style="color:#a78bfa">690</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">封号数量</div>
+    <div class="value danger">76</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">总体封号率</div>
+    <div class="value warning">11.0%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">封号触发类型</div>
+    <div class="value" style="color:#ffa502; font-size:16px">Identity<br>Checkpoint</div>
+  </div>
+</div>
+
+<!-- 核心结论 -->
+<div class="section">
+  <h2>核心结论</h2>
+  <div class="alert">
+    <h3>主要封号原因：触发 Facebook Identity Checkpoint（身份验证检查点）</h3>
+    <p>所有 76 台被标记为封号的机器人，均在操作时触发了 Facebook 的身份验证检查点，<br>
+    要求进行<strong style="color:#ff4757">人脸识别或证件验证</strong>（checkpointType: 身份验证），账号进入锁定状态，系统自动标记为 status=3。</p>
+    <br>
+    <p>Checkpoint URL: <code style="color:#ff9f43">https://www.facebook.com/checkpoint/1501092823525282/</code></p>
+  </div>
+
+  <div class="info">
+    <h3>封号触发节点分析</h3>
+    <ul>
+      <li><strong>修改头像（type=1003）触发</strong>：44台（57.9%）—— 修改头像是最危险的触发点，失败率高达 <span style="color:#ff4757">77.5%</span></li>
+      <li><strong>发布帖子（type=1009）触发</strong>：25台（32.9%）—— 发帖成功率约50%，也是高风险操作</li>
+      <li><strong>修改背景（type=1006）触发</strong>：2台（2.6%）</li>
+      <li><strong>包装完成后封号</strong>：5台（6.6%）—— 任务执行完毕后账号被检测到</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 各任务封号详情 -->
+<div class="section">
+  <h2>各任务封号详情</h2>
+  <table>
+    <tr><th>任务名称</th><th>总数</th><th>正常</th><th>重登</th><th>封号（封号率）</th></tr>
+    
+        <tr>
+            <td>325印度金融3包1</td>
+            <td>501</td>
+            <td>442</td>
+            <td>1</td>
+            <td style="color:#ffa502;font-weight:bold">58 (11.6%)</td>
+        </tr>
+        <tr>
+            <td>325印度金融3包1-2</td>
+            <td>189</td>
+            <td>167</td>
+            <td>4</td>
+            <td style="color:#ffa502;font-weight:bold">18 (9.5%)</td>
+        </tr>
+  </table>
+</div>
+
+<!-- 两列布局 -->
+<div class="two-col">
+  <!-- 封号原因分类 -->
+  <div class="section">
+    <h2>封号原因分类（task_note）</h2>
+    <table>
+      <tr><th>失败原因</th><th>包装状态</th><th>发帖状态</th><th>数量</th></tr>
+      
+        <tr>
+            <td>修改头像操作失败,机器人已异常</td>
+            <td>3</td>
+            <td>0</td>
+            <td>43 (56.6%)</td>
+        </tr>
+        <tr>
+            <td>发布帖子操作失败,机器人已异常</td>
+            <td>2</td>
+            <td>3</td>
+            <td>23 (30.3%)</td>
+        </tr>
+        <tr>
+            <td>包装完成</td>
+            <td>2</td>
+            <td>2</td>
+            <td>5 (6.6%)</td>
+        </tr>
+        <tr>
+            <td>发布帖子操作失败,账号异常</td>
+            <td>2</td>
+            <td>3</td>
+            <td>2 (2.6%)</td>
+        </tr>
+        <tr>
+            <td>修改背景操作失败,机器人已异常</td>
+            <td>3</td>
+            <td>0</td>
+            <td>2 (2.6%)</td>
+        </tr>
+        <tr>
+            <td>修改头像操作失败,Cookie 已失效，请重新登录</td>
+            <td>3</td>
+            <td>0</td>
+            <td>1 (1.3%)</td>
+        </tr>
+    </table>
+    <div style="margin-top:12px; font-size:12px; color:#666">
+      pack_status: 1=未开始 2=进行中 3=失败 | post_status: 0=未发帖 2=已完成 3=失败
+    </div>
+  </div>
+
+  <!-- Checkpoint 类型 -->
+  <div class="section">
+    <h2>Checkpoint 类型分布</h2>
+    <table>
+      <tr><th>验证类型</th><th>数量</th></tr>
+      <tr><td>未知类型 (1501092823525282)</td><td>73 (96.1%)</td></tr><tr><td>未知类型 (828281030927956)</td><td>3 (3.9%)</td></tr>
+    </table>
+    <br>
+    <div class="alert">
+      <h3>什么是 Checkpoint /1501092823525282/ ?</h3>
+      <p>这是 Facebook 的"账号身份确认"检查点（Identity Confirmation Checkpoint）。<br>
+      触发条件：FB 检测到账号存在<strong>异常行为或新账号批量操作</strong>，需要用户进行身份认证（人脸/证件扫描）方可解除锁定。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 操作成功率分析 -->
+<div class="section">
+  <h2>封号机器人当日操作成功率分析</h2>
+  <table>
+    <tr><th>操作类型</th><th>成功次数</th><th>失败次数</th><th>Checkpoint触发</th><th>成功率</th></tr>
+    
+        <tr>
+            <td>修改头像 (type=1003)</td>
+            <td>32</td>
+            <td>110</td>
+            <td>0</td>
+            <td style="color:#ff4757;font-weight:bold">22.5%</td>
+        </tr>
+        <tr>
+            <td>修改背景图 (type=1004)</td>
+            <td>24</td>
+            <td>3</td>
+            <td>0</td>
+            <td style="color:#2ed573;font-weight:bold">88.9%</td>
+        </tr>
+        <tr>
+            <td>修改个人信息 (type=1005)</td>
+            <td>30</td>
+            <td>2</td>
+            <td>0</td>
+            <td style="color:#2ed573;font-weight:bold">93.8%</td>
+        </tr>
+        <tr>
+            <td>修改签名 (type=1006)</td>
+            <td>29</td>
+            <td>6</td>
+            <td>0</td>
+            <td style="color:#2ed573;font-weight:bold">82.9%</td>
+        </tr>
+        <tr>
+            <td>发布帖子 (type=1009)</td>
+            <td>64</td>
+            <td>64</td>
+            <td>0</td>
+            <td style="color:#ffa502;font-weight:bold">50.0%</td>
+        </tr>
+        <tr>
+            <td>其他包装操作 (type=1018)</td>
+            <td>8</td>
+            <td>0</td>
+            <td>0</td>
+            <td style="color:#2ed573;font-weight:bold">100.0%</td>
+        </tr>
+        <tr>
+            <td>登录/状态检测 (type=3000)</td>
+            <td>100</td>
+            <td>42</td>
+            <td>76</td>
+            <td style="color:#ffa502;font-weight:bold">45.9%</td>
+        </tr>
+        <tr>
+            <td>退出登录 (type=3001)</td>
+            <td>76</td>
+            <td>0</td>
+            <td>0</td>
+            <td style="color:#2ed573;font-weight:bold">100.0%</td>
+        </tr>
+        <tr>
+            <td>切换账号 (type=3002)</td>
+            <td>4</td>
+            <td>4</td>
+            <td>0</td>
+            <td style="color:#ffa502;font-weight:bold">50.0%</td>
+        </tr>
+  </table>
+</div>
+
+<!-- 账号年龄分布 -->
+<div class="section">
+  <h2>账号年龄与封号率对比</h2>
+  <table>
+    <tr><th>账号年龄</th><th>正常数</th><th>封号数</th><th>合计</th><th>封号率</th></tr>
+    
+        <tr>
+            <td>0-10天</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td style="color:#2ed573;font-weight:bold">0%</td>
+        </tr>
+        <tr>
+            <td>11-20天</td>
+            <td>574</td>
+            <td>67</td>
+            <td>641</td>
+            <td style="color:#ffa502;font-weight:bold">10.5%</td>
+        </tr>
+        <tr>
+            <td>21-30天</td>
+            <td>37</td>
+            <td>6</td>
+            <td>43</td>
+            <td style="color:#ffa502;font-weight:bold">14.0%</td>
+        </tr>
+        <tr>
+            <td>30天以上</td>
+            <td>3</td>
+            <td>3</td>
+            <td>6</td>
+            <td style="color:#ff4757;font-weight:bold">50.0%</td>
+        </tr>
+  </table>
+  <div style="margin-top:12px">
+    <div class="info">
+      <h3>账号年龄分析结论</h3>
+      <p>本次任务机器人主要集中在 <strong>11-20天</strong>（3月初注册），这批账号养号时间较短，
+      Facebook 对新账号进行批量人设包装操作（修改头像/发帖等）会触发更严格的风控检测。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 典型封号操作序列 -->
+<div class="section">
+  <h2>典型封号操作序列（LogTrace）</h2>
+  <p style="font-size:13px;color:#888;margin-bottom:12px">以下为最常见的两种封号路径：</p>
+
+  <p style="color:#ffa502;font-size:13px;margin-bottom:6px">路径一：修改头像 → Checkpoint（56.6%，43台）</p>
+  <div class="flow-box">
+    <span class="step-ok">[15:20~15:40] type=1003</span> 修改头像 → <span class="step-fail">500: Cookie已失效，请重新登录</span><br>
+    <span class="step-warn">[+30s] type=3000</span> 登录状态检测 → <span class="step-fail">900: needsCheckpoint=true | checkpointType=身份验证（可能需要人脸/证件）</span><br>
+    <span class="step-fail">[+1s] type=1003</span> 再次修改头像 → <span class="step-fail">500: 账号异常</span><br>
+    <span class="step-ok">[+1s] type=3001</span> 退出登录 → <span class="step-ok">0: 成功</span><br>
+    <span class="step-fail">→ 系统标记 robot.status = 3 (封号)</span>
+  </div>
+
+  <p style="color:#ffa502;font-size:13px;margin-bottom:6px;margin-top:16px">路径二：发布帖子 → Checkpoint（32.9%，25台）</p>
+  <div class="flow-box">
+    <span class="step-ok">[进行中] type=1003/1004/1005/1006</span> 头像/背景/信息/签名包装 → <span class="step-ok">0: 成功</span><br>
+    <span class="step-ok">[type=1009]</span> 第1-N条帖子发布 → <span class="step-ok">0: 发帖成功</span><br>
+    <span class="step-fail">[type=1009]</span> 某条帖子 → <span class="step-fail">500: Facebook API Error [1357053]: account restricted / 账号异常</span><br>
+    <span class="step-warn">[type=3000]</span> 登录检测 → <span class="step-fail">900: needsCheckpoint=true</span><br>
+    <span class="step-fail">→ 系统标记 robot.status = 3 (封号)</span>
+  </div>
+</div>
+
+<!-- 风险总结与建议 -->
+<div class="section">
+  <h2>风险因素总结与优化建议</h2>
+
+  <div class="alert">
+    <h3>高风险因素</h3>
+    <ul>
+      <li>账号太新（11-20天）就执行完整人设包装，Facebook 对新账号的行为变化极为敏感</li>
+      <li>修改头像（type=1003）当前失败率 <strong>77.5%</strong>，是最高风险单一操作</li>
+      <li>批量并发执行：690台机器人约1小时内同时执行人设包装，高并发可能加速风控触发</li>
+      <li>账号注册特征统一（3月初批量注册），相似特征的账号集中操作风险更高</li>
+    </ul>
+  </div>
+
+  <div class="recommend">
+    <h3>优化建议</h3>
+    <ol>
+      <li><strong>延长养号时间</strong>：建议账号注册后至少养号 <strong>30天以上</strong> 再进行人设包装，降低新账号风控触发率</li>
+      <li><strong>分批次执行</strong>：将690台机器人分为多个批次，每批不超过100台，批次间隔2-4小时，避免同时操作触发风控</li>
+      <li><strong>降低修改头像频率</strong>：头像修改是最高风险操作，可考虑在发帖操作前几天提前单独修改，而非在包装任务中集中执行</li>
+      <li><strong>操作间隔随机化</strong>：在各操作步骤间增加随机等待时间（10-60秒），模拟真实用户行为</li>
+      <li><strong>监控 API Error 1357053</strong>：这个错误码表示账号已被限制，出现即应停止该账号的所有操作并标记待人工处理</li>
+      <li><strong>预热操作</strong>：包装前先进行低风险操作（浏览Feed、点赞等）让账号有一定活跃记录，再执行包装操作</li>
+    </ol>
+  </div>
+</div>
+
+<div style="text-align:center;color:#444;font-size:12px;margin-top:20px;padding:10px">
+  生成时间: 2026-03-25 | FB Risk Analyzer | hw_fans DB
+</div>
+
+</body>
+</html>
